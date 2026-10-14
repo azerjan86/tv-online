@@ -1,0 +1,12 @@
+
+#EXTM3U
+#EXTINF:-1 group-title="Xəbərlər",AzTV
+https://str.yodacdn.net/azertv/index.m3u8
+#EXTINF:-1 group-title="Xəbərlər",İctimai TV
+https://live.itv.az/itv.m3u8
+#EXTINF:-1 group-title="İdman",CBC Sport
+https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8
+#EXTINF:-1 group-title="Mədəniyyət",Mədəniyyət TV
+https://str.yodacdn.net/medeniyyettele/index.m3u8
+#EXTINF:-1 group-title="Xəbərlər",Baku TV
+https://rtmp.baku.tv/hls/bakutv.m3u8
