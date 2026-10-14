@@ -103,6 +103,16 @@ function parseM3U(text){
   const lines = text.replace(/^\uFEFF/,'').split(/\r?\n/);
   const result = [];
   let name = 'TV kanalı';
+#EXTINF:-1 tvg-id="iptvxone:aztv" tvg-name="AzTV HD original" tvg-logo="https://iptvx.one/picons/aztv.png" group-title="ORIGINAL HD",AzTV HD original
+https://cyriustv.cc/live/aztvorig/index.m3u8?sid=7ZCSVKEJQCKH
+#EXTINF:-1 tvg-name="Baku TV HD original" group-title="ORIGINAL HD",Baku TV HD original
+https://cyriustv.cc/live/bakutvorig/index.m3u8?sid=7ZCSVKEJQCKH
+#EXTINF:-1 tvg-id="iptvxone:ictimai-tv" tvg-name="Ictimai TV HD original" tvg-logo="https://iptvx.one/picons/ictimai-tv.png" group-title="ORIGINAL HD",Ictimai TV HD original
+https://cyriustv.cc/live/ictimaihdorig/index.m3u8?sid=7ZCSVKEJQCKH
+#EXTINF:-1 tvg-name="Space TV HD orig" group-title="ORIGINAL HD",Space TV HD orig
+https://cyriustv.cc/live/spacetvorig/index.m3u8?sid=7ZCSVKEJQCKH
+#EXTINF:-1 tvg-name="Xazar TV HD original" group-title="ORIGINAL HD",Xazar TV HD original
+https://cyriustv.cc/live/xazarhdorig/index.m3u8?sid=7ZCSVKEJQCKH
 
   for(const raw of lines){
     const line = raw.trim();
