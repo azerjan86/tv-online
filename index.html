@@ -68,7 +68,41 @@ footer{text-align:center;padding:25px;color:#999}
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 <script>
-const channels = [];
+
+const channels = [
+  {
+    name: "AzTV",
+    url: "https://str.yodacdn.net/azertv/index.m3u8"
+  },
+  {
+    name: "İctimai TV",
+    url: "https://live.itv.az/itv.m3u8"
+  },
+  {
+    name: "CBC Sport",
+    url: "https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8"
+  },
+  {
+    name: "Mədəniyyət TV",
+    url: "https://str.yodacdn.net/medeniyyettele/index.m3u8"
+  },
+  {
+    name: "Baku TV",
+    url: "https://rtmp.baku.tv/hls/bakutv.m3u8"
+  },
+  {
+    name: "Kanal 35",
+    url: "https://str2.yodacdn.net/kanal35/index.m3u8"
+  },
+  {
+    name: "Naxçıvan TV",
+    url: "https://str2.yodacdn.net/ntv/video.m3u8"
+  },
+  {
+    name: "Kanal S",
+    url: "https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8"
+  }
+];
 const grid = document.getElementById('channels');
 const video = document.getElementById('video');
 const statusText = document.getElementById('status');
