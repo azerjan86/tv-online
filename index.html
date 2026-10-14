@@ -1,1 +1,197 @@
 
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TV ONLINE AZ</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101010;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px 5%;background:#181818;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:bold;color:#e50914}
+main{padding:25px 5%;max-width:1200px;margin:auto}
+.hero{padding:40px 5%;background:linear-gradient(110deg,#401015,#171717);border-radius:12px}
+h1{font-size:clamp(32px,6vw,55px);margin:10px 0}
+p{color:#bbb;line-height:1.6}
+input,button{padding:12px;border-radius:6px;border:0;font-size:15px}
+input{background:#252525;color:white;border:1px solid #444;width:100%}
+button{background:#e50914;color:white;cursor:pointer;font-weight:bold}
+button:hover{opacity:.85}
+.search{margin:22px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px}
+.card{background:#202020;border-radius:9px;padding:16px;border:1px solid #333}
+.logo-box{height:75px;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:bold;color:#ff535b}
+.card h3{font-size:16px}
+.card button{width:100%;font-size:13px}
+.player{margin-top:30px;background:#1d1d1d;padding:18px;border-radius:10px}
+video{width:100%;aspect-ratio:16/9;background:#000}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.actions input{flex:1;min-width:180px}
+#status{font-size:13px;color:#bbb}
+footer{text-align:center;padding:25px;color:#999}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">▶ TV ONLINE AZ</div>
+  <span>Canlı televiziya</span>
+</header>
+
+<main>
+  <section class="hero">
+    <p>AZƏRBAYCAN IPTV PLATFORMASI</p>
+    <h1>Televiziya bir yerdə.</h1>
+    <p>M3U pleylistini yüklə, kanal seç və izlə.</p>
+    <button onclick="document.getElementById('file').click()">
+      ＋ Pleylist əlavə et
+    </button>
+    <input id="file" type="file" accept=".m3u,.m3u8,.txt" hidden>
+  </section>
+
+  <section class="player" id="player">
+    <h2 id="now">Canlı TV pleyeri</h2>
+    <video id="video" controls playsinline></video>
+    <p id="status">İzləmək üçün kanal seç və ya M3U pleylisti yüklə.</p>
+    <div class="actions">
+      <input id="url" placeholder="M3U pleylistinin URL-si">
+      <button id="load">Yüklə</button>
+    </div>
+  </section>
+
+  <h2>📺 Kanallar</h2>
+  <input class="search" id="search" placeholder="Kanal axtar...">
+  <div class="grid" id="channels"></div>
+</main>
+
+<footer>TV ONLINE AZ · IPTV Player</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+<script>
+const channels = [];
+const grid = document.getElementById('channels');
+const video = document.getElementById('video');
+const statusText = document.getElementById('status');
+let hls = null;
+
+function render(){
+  const q = document.getElementById('search').value.toLowerCase();
+  grid.replaceChildren();
+
+  channels.filter(c => c.name.toLowerCase().includes(q))
+  .forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const logo = document.createElement('div');
+    logo.className = 'logo-box';
+    logo.textContent = c.name.slice(0,18);
+
+    const title = document.createElement('h3');
+    title.textContent = c.name;
+
+    const btn = document.createElement('button');
+    btn.textContent = '▶ İzlə';
+    btn.onclick = () => playChannel(c);
+
+    card.append(logo,title,btn);
+    grid.append(card);
+  });
+}
+
+function parseM3U(text){
+  const lines = text.replace(/^\uFEFF/,'').split(/\r?\n/);
+  const result = [];
+  let name = 'TV kanalı';
+
+  for(const raw of lines){
+    const line = raw.trim();
+    if(line.startsWith('#EXTINF:')){
+      name = line.slice(line.lastIndexOf(',')+1).trim()
+        || 'TV kanalı';
+    }else if(line && !line.startsWith('#')){
+      try{
+        const u = new URL(line);
+        if(!['http:','https:'].includes(u.protocol)) continue;
+        result.push({name,url:u.href});
+      }catch{}
+    }
+  }
+  return result;
+}
+
+function stop(){
+  if(hls){hls.destroy();hls=null;}
+  video.pause();
+  video.removeAttribute('src');
+  video.load();
+}
+
+function playChannel(c){
+  stop();
+  document.getElementById('now').textContent = c.name;
+  statusText.textContent = 'Yayım yüklənir...';
+
+  if(/\.m3u8($|[?#])/i.test(c.url) &&
+     window.Hls && Hls.isSupported()){
+    hls = new Hls();
+    hls.loadSource(c.url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED,()=>{
+      video.play().catch(()=>{
+        statusText.textContent='Play düyməsinə bas.';
+      });
+    });
+    hls.on(Hls.Events.ERROR,(e,d)=>{
+      if(d.fatal) statusText.textContent=
+        'Yayım açıla bilmədi. Linki yoxla.';
+    });
+  }else{
+    video.src=c.url;
+    video.play().catch(()=>{
+      statusText.textContent=
+        'Yayım başlamadı. Link və formatı yoxla.';
+    });
+  }
+  document.getElementById('player').scrollIntoView({behavior:'smooth'});
+}
+
+function addPlaylist(text){
+  if(!text.trim().startsWith('#EXTM3U')){
+    statusText.textContent='Düzgün M3U pleylisti seç.';
+    return;
+  }
+  const result=parseM3U(text);
+  if(!result.length){
+    statusText.textContent='Pleylistdə kanal tapılmadı.';
+    return;
+  }
+  stop();
+  channels.splice(0,channels.length,...result);
+  render();
+  statusText.textContent=result.length+' kanal yükləndi.';
+}
+
+document.getElementById('file').addEventListener('change',async e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  try{addPlaylist(await file.text());}
+  catch{statusText.textContent='Faylı oxumaq mümkün olmadı.';}
+});
+
+document.getElementById('load').onclick=async()=>{
+  try{
+    const response=await fetch(document.getElementById('url').value);
+    if(!response.ok)throw Error();
+    addPlaylist(await response.text());
+  }catch{
+    statusText.textContent=
+      'Yükləmə alınmadı. CORS məhdudiyyəti ola bilər; faylı seç.';
+  }
+};
+
+document.getElementById('search').addEventListener('input',render);
+render();
+</script>
+</body>
+</html>
