@@ -1,14 +1,16 @@
 
 <!DOCTYPE html>
 <html lang="az">
-<head><link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0A0F1C">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090b12">
-  <title>ANVAR IPTV — Canlı TV</title>
   <meta name="description" content="ANVAR IPTV — Azərbaycan televiziya kanallarını onlayn izləyin.">
+  <link rel="manifest" href="./manifest.json">
+  <title>ANVAR IPTV — Canlı TV</title>
+
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+
   <style>
     :root {
       color-scheme: dark;
@@ -22,13 +24,7 @@
     }
 
     * { box-sizing: border-box; }
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("./service-worker.js");
-  });
-}
-</script>
+
     body {
       margin: 0;
       background:
@@ -97,6 +93,7 @@ if ("serviceWorker" in navigator) {
       overflow: hidden;
       border-radius: 12px;
       background: #030408;
+      isolation: isolate;
     }
 
     video {
@@ -137,7 +134,7 @@ if ("serviceWorker" in navigator) {
     .empty-sub { color: var(--muted); font-size: 12px; padding: 0 12px; }
 
     .now-playing { margin-top: 16px; font-size: 20px; font-weight: 850; }
-    .status { margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.6; min-height: 20px; }
+    .status { margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.6; min-height: 20px; overflow-wrap: anywhere; }
 
     .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
 
@@ -153,6 +150,7 @@ if ("serviceWorker" in navigator) {
     .btn:hover { border-color: var(--red); }
     .btn.primary { background: var(--red); border-color: var(--red); font-weight: 750; }
     .btn.active { border-color: var(--red); background: #39202b; color: #ff8992; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
 
     .section-title {
       display: flex;
@@ -218,6 +216,7 @@ if ("serviceWorker" in navigator) {
       font-size: 10px;
       font-weight: 900;
       overflow: hidden;
+      text-align: center;
     }
 
     .channel-info { flex: 1; min-width: 0; }
@@ -286,7 +285,7 @@ if ("serviceWorker" in navigator) {
     <div class="layout">
       <section class="panel">
         <div class="video-wrap">
-          <video id="video" controls playsinline preload="none"></video>
+          <video id="video" controls playsinline webkit-playsinline preload="none"></video>
           <div class="empty-player" id="emptyPlayer">
             <div class="big-play">▶</div>
             <div class="empty-title">ANVAR IPTV</div>
@@ -303,11 +302,13 @@ if ("serviceWorker" in navigator) {
           <button class="btn primary" id="playBtn">▶ İzlə</button>
           <button class="btn" id="stopBtn">■ Dayandır</button>
           <button class="btn" id="favoriteCurrent">☆ Seçilmişlərə əlavə et</button>
+          <button class="btn" id="fullscreenBtn">⛶ Tam ekran</button>
         </div>
 
         <div class="note">
           Qeyd: Canlı yayımlar üçüncü tərəflərin serverlərindən gəlir.
-          Kanal açılmırsa, yayım ünvanı dəyişmiş və ya müvəqqəti əlçatmaz ola bilər.
+          Kanal açılmırsa, yayım ünvanı dəyişmiş, server tərəfindən bloklanmış
+          və ya müvəqqəti əlçatmaz ola bilər.
         </div>
       </section>
 
@@ -337,8 +338,6 @@ if ("serviceWorker" in navigator) {
   <script>
     "use strict";
 
-    // Canlı yayım ünvanları dəyişə bilər. İşləməyən ünvanı
-    // həmin kanalın rəsmi yayım ünvanı ilə əvəz edin.
     const channels = [
       { name: "AzTV", logo: "AzTV", category: "Milli kanal", url: "https://str2.yodacdn.net/azertv/tracks-v1a1/mono.ts.m3u8" },
       { name: "Space TV", logo: "Space TV", category: "Milli kanal", url: "https://yayin2.canlitv.fun/live/spacetv.stream/chunklist_w802258604.m3u8" },
@@ -354,7 +353,11 @@ if ("serviceWorker" in navigator) {
       { name: "Dünya TV", logo: "DÜNYA", category: "Milli kanal", url: "https://stream.dunyatv.az/live/dunyatv.m3u8" },
       { name: "Radio Telekom TV", logo: "RT", category: "Əyləncə", url: "https://a8.radyotelekom.com.tr:3276/stream/play.m3u8" },
       { name: "İctimai TV", logo: "İTV", category: "İctimai kanal", url: "https://cyriustv.cc/live/ictimaihdorig/index.m3u8?sid=7ZCSVKEJQCKH" },
-      { name: "Idman TV", logo: "Idman TV", category: "İdman", url: "https://andro.evrenesoglu155.click/checklist/androstreamliveidm.m3u8" }
+      { name: "Idman TV", logo: "Idman TV", category: "İdman", url: "https://andro.evrenesoglu155.click/checklist/androstreamliveidm.m3u8" },
+      { name: "ITV AZ", logo: "ITV", category: "Milli kanal", url: "https://helga.iptv2022.com/itv_az/index.m3u8" },
+      { name: "ARB AZ", logo: "ARB", category: "Milli kanal", url: "https://helga.iptv2022.com/arb_az/index.m3u8" },
+      { name: "AYAZ TV", logo: "AYAZ", category: "Milli kanal", url: "https://uae.iptv2022.com/Ayaz_TV/index.m3u8" },
+      { name: "LIVE TV AZ", logo: "LIVE", category: "Milli kanal", url: "https://uae.iptv2022.com/LIVETVAZ/index.m3u8" }
     ];
 
     const $ = id => document.getElementById(id);
@@ -362,6 +365,7 @@ if ("serviceWorker" in navigator) {
     let hls = null;
     let currentChannel = null;
     let favoritesOnly = false;
+    let playbackGeneration = 0;
     let favorites = new Set();
 
     try {
@@ -378,78 +382,123 @@ if ("serviceWorker" in navigator) {
     }
 
     function stopPlayback() {
+      playbackGeneration++;
+
       if (hls) {
         hls.destroy();
         hls = null;
       }
+
       video.pause();
       video.removeAttribute("src");
       video.load();
+      video.onerror = null;
+      video.onloadedmetadata = null;
       $("emptyPlayer").classList.remove("hidden");
     }
 
     function startPlayback(channel) {
       currentChannel = channel;
       stopPlayback();
+
+      const generation = playbackGeneration;
+
       $("nowPlaying").textContent = channel.name;
       $("emptyPlayer").classList.add("hidden");
-      setStatus("Yayım yüklənir...");
       $("playBtn").textContent = "▶ Yenidən izlə";
+      setStatus("Yayım yüklənir...");
       updateFavoriteButton();
       renderChannels();
 
-      if (window.Hls && Hls.isSupported()) {
-        hls = new Hls({
-          enableWorker: true,
-          maxBufferLength: 20
-        });
+      function showError(message) {
+        if (generation !== playbackGeneration) return;
+        setStatus(message);
+        $("emptyPlayer").classList.remove("hidden");
+      }
 
-        hls.on(Hls.Events.ERROR, function (event, data) {
-          if (!data.fatal) return;
+      function startNativeHls() {
+        video.src = channel.url;
 
-          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            setStatus("Yayım serverinə qoşulmaq mümkün olmadı. Mənbə bloklanmış və ya offline ola bilər.");
-          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-            setStatus("Video formatında xəta baş verdi.");
-          } else {
-            setStatus("Bu yayımı açmaq mümkün olmadı. Başqa kanal sınayın.");
-          }
-
-          hls.destroy();
-          hls = null;
-        });
-
-        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        video.onloadedmetadata = function () {
+          if (generation !== playbackGeneration) return;
           setStatus("Yayım hazırdır.");
-          video.play().catch(() => {
-            setStatus("Yayımı başlatmaq üçün videodakı ▶ düyməsinə basın.");
+        };
+
+        video.onerror = function () {
+          showError("Yayım açılmadı. Ünvanı və internet bağlantısını yoxlayın.");
+        };
+
+        video.play().catch(function () {
+          if (generation === playbackGeneration) {
+            setStatus("Videonu başlatmaq üçün ▶ düyməsinə basın.");
+          }
+        });
+      }
+
+      if (window.Hls && Hls.isSupported()) {
+        const player = new Hls({
+          enableWorker: true,
+          maxBufferLength: 20,
+          manifestLoadingTimeOut: 15000,
+          levelLoadingTimeOut: 15000,
+          fragLoadingTimeOut: 20000,
+          manifestLoadingMaxRetry: 2,
+          levelLoadingMaxRetry: 2,
+          fragLoadingMaxRetry: 2
+        });
+
+        hls = player;
+
+        player.on(Hls.Events.MANIFEST_PARSED, function () {
+          if (generation !== playbackGeneration || hls !== player) return;
+
+          setStatus("Yayım hazırdır.");
+
+          video.play().catch(function () {
+            if (generation === playbackGeneration) {
+              setStatus("Yayımı başlatmaq üçün videodakı ▶ düyməsinə basın.");
+            }
           });
         });
 
-        hls.loadSource(channel.url);
-        hls.attachMedia(video);
+        player.on(Hls.Events.ERROR, function (event, data) {
+          if (generation !== playbackGeneration || hls !== player || !data.fatal) return;
+
+          if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+            setStatus("Video bərpa edilir...");
+            player.recoverMediaError();
+            return;
+          }
+
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            showError("Serverə qoşulmaq mümkün olmadı. Ünvan, internet və ya CORS problemi ola bilər.");
+          } else {
+            showError("Bu yayım açıla bilmədi. Başqa kanal sınayın.");
+          }
+
+          player.destroy();
+          if (hls === player) hls = null;
+        });
+
+        player.attachMedia(video);
+        player.loadSource(channel.url);
+
       } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src = channel.url;
-        video.addEventListener("error", function onError() {
-          video.removeEventListener("error", onError);
-          setStatus("Yayım açılmadı. Mənbə əlçatmaz ola bilər.");
-        });
-        video.play().catch(() => {
-          setStatus("Yayımı başlatmaq üçün videodakı ▶ düyməsinə basın.");
-        });
+        startNativeHls();
       } else {
-        $("emptyPlayer").classList.remove("hidden");
-        setStatus("Brauzer bu video formatını dəstəkləmir.");
+        showError("Bu brauzer HLS formatını dəstəkləmir.");
       }
     }
 
     function updateFavoriteButton() {
       const button = $("favoriteCurrent");
+
       if (!currentChannel) {
         button.textContent = "☆ Seçilmişlərə əlavə et";
         button.disabled = true;
         return;
       }
+
       button.disabled = false;
       const saved = favorites.has(currentChannel.name);
       button.textContent = saved ? "★ Seçilmişlərdədir" : "☆ Seçilmişlərə əlavə et";
@@ -474,6 +523,7 @@ if ("serviceWorker" in navigator) {
     function renderChannels() {
       const query = $("search").value.trim().toLocaleLowerCase("az");
       const list = $("channelList");
+
       const filtered = channels.filter(channel => {
         const matches = channel.name.toLocaleLowerCase("az").includes(query);
         return matches && (!favoritesOnly || favorites.has(channel.name));
@@ -485,9 +535,7 @@ if ("serviceWorker" in navigator) {
       if (!filtered.length) {
         const empty = document.createElement("div");
         empty.className = "empty-list";
-        empty.textContent = favoritesOnly
-          ? "Seçilmiş kanal yoxdur."
-          : "Kanal tapılmadı.";
+        empty.textContent = favoritesOnly ? "Seçilmiş kanal yoxdur." : "Kanal tapılmadı.";
         list.appendChild(empty);
         return;
       }
@@ -566,8 +614,35 @@ if ("serviceWorker" in navigator) {
       if (currentChannel) toggleFavorite(currentChannel);
     });
 
+    $("fullscreenBtn").addEventListener("click", async () => {
+      const target = document.querySelector(".video-wrap");
+
+      try {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else if (target.requestFullscreen) {
+          await target.requestFullscreen();
+        } else if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        } else {
+          setStatus("Tam ekran bu brauzerdə dəstəklənmir.");
+        }
+      } catch (error) {
+        setStatus("Tam ekran açıla bilmədi.");
+      }
+    });
+
     renderChannels();
     updateFavoriteButton();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js")
+          .catch(function (error) {
+            console.warn("Service Worker:", error);
+          });
+      });
+    }
   </script>
 </body>
 </html>
