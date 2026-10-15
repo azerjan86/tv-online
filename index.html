@@ -3,32 +3,46 @@
 "use strict";
 
 const channels = [
-  {name:"AzTV",logo:"AzTV",id:"az-tv-azerbaycan-tv-izle"},
-  {name:"İctimai TV",logo:"İTV",id:"ictimai-tv-canli-izle"},
-  {name:"İdman TV",logo:"İDMAN",id:"idmantv-canli-hd-izle"},
-  {name:"CBC Sport",logo:"CBC SPORT",id:"cbc-sport"},
-  {name:"ARB 24",logo:"ARB 24",id:"arb-24-az-canli"},
-  {name:"Space TV",logo:"SPACE",id:"space-tv-az-canli-izle"},
-  {name:"Mədəniyyət TV",logo:"MƏDƏNİYYƏT",id:"medeniyyet-tv-az"},
-  {name:"Kanal S",logo:"KANAL S",id:"kanal-s-az"},
-  {name:"CBC Azərbaycan",logo:"CBC AZ",id:"cbc-az-tv-cenub-tv-canli"},
-  {name:"Baku TV",logo:"BAKU TV",id:"baku-tv-az-canli"},
-  {name:"Xəzər TV",logo:"XƏZƏR",id:"xezer-tv-canli-izle"},
-  {name:"AZ News TV",logo:"AZ NEWS",id:"az-news-tv-canli"}
+  {name:"AzTV",logo:"AzTV",url:"https://str.yodacdn.net/azertv/index.m3u8"},
+  {name:"İctimai TV",logo:"İTV",url:"https://live.itv.az/itv.m3u8"},
+  {name:"İdman TV",logo:"İDMAN",url:null},
+  {name:"CBC Sport",logo:"CBC SPORT",url:"https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8"},
+  {name:"ARB 24",logo:"ARB 24",url:null},
+  {name:"Space TV",logo:"SPACE",url:null},
+  {name:"Mədəniyyət TV",logo:"MƏDƏNİYYƏT",url:"https://str.yodacdn.net/medeniyyettele/index.m3u8"},
+  {name:"Kanal S",logo:"KANAL S",url:"https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8"},
+  {name:"CBC Azərbaycan",logo:"CBC AZ",url:null},
+  {name:"Baku TV",logo:"BAKU TV",url:"https://rtmp.baku.tv/hls/bakutv.m3u8"},
+  {name:"Xəzər TV",logo:"XƏZƏR",url:null},
+  {name:"AZ News TV",logo:"AZ NEWS",url:null}
 ];
 
 const grid = document.getElementById("channels");
-const screen = document.getElementById("screen");
+const video = document.getElementById("video");
 const now = document.getElementById("now");
-const status = document.getElementById("status");
+const statusText = document.getElementById("status");
+
+let hls = null;
+let playbackId = 0;
+
+function stopPlayer() {
+  playbackId++;
+
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
+
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+}
 
 function playChannel(channel, card) {
-  screen.src =
-    "https://www.ecanlitvizle.live/embed.php?kanal=" +
-    encodeURIComponent(channel.id);
+  stopPlayer();
+  const id = playbackId;
 
   now.textContent = "📺 " + channel.name;
-  status.textContent = "Pleyer yüklənir...";
 
   document.querySelectorAll(".card").forEach(item =>
     item.classList.remove("active")
@@ -39,13 +53,55 @@ function playChannel(channel, card) {
     behavior: "smooth",
     block: "start"
   });
+
+  if (!channel.url) {
+    statusText.textContent =
+      "Bu kanal üçün birbaşa yayım linki hələ əlavə edilməyib.";
+    return;
+  }
+
+  statusText.textContent = "Yayım yüklənir...";
+
+  const report = message => {
+    if (id === playbackId) statusText.textContent = message;
+  };
+
+  if (window.Hls && Hls.isSupported()) {
+    const player = new Hls();
+    hls = player;
+
+    player.on(Hls.Events.MANIFEST_PARSED, () => {
+      if (id !== playbackId) return;
+
+      video.play().catch(() =>
+        report("Yayımı başlatmaq üçün Play düyməsinə bas.")
+      );
+    });
+
+    player.on(Hls.Events.ERROR, (event, data) => {
+      if (data.fatal && id === playbackId) {
+        report("Yayım açılmadı. Link bloklanmış və ya əlçatmaz ola bilər.");
+        player.destroy();
+        if (hls === player) hls = null;
+      }
+    });
+
+    player.loadSource(channel.url);
+    player.attachMedia(video);
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.src = channel.url;
+
+    video.play().catch(() =>
+      report("Yayımı başlatmaq üçün Play düyməsinə bas.")
+    );
+  } else {
+    report("Brauzer bu yayım formatını dəstəkləmir.");
+  }
 }
 
 function renderChannels() {
-  if (!grid) return;
-
-  const search = document.getElementById("search");
-  const query = search.value.toLocaleLowerCase("az");
+  const query = document.getElementById("search")
+    .value.toLocaleLowerCase("az");
 
   grid.replaceChildren();
 
@@ -53,7 +109,7 @@ function renderChannels() {
     channel.name.toLocaleLowerCase("az").includes(query)
   );
 
-  if (filtered.length === 0) {
+  if (!filtered.length) {
     const message = document.createElement("p");
     message.textContent = "Kanal tapılmadı.";
     grid.appendChild(message);
@@ -84,6 +140,17 @@ function renderChannels() {
 
 document.getElementById("search")
   .addEventListener("input", renderChannels);
+
+video.addEventListener("playing", () => {
+  statusText.textContent = "Canlı yayım oynadılır.";
+});
+
+video.addEventListener("error", () => {
+  if (video.currentSrc) {
+    statusText.textContent =
+      "Video açıla bilmədi. Başqa kanal yoxla.";
+  }
+});
 
 renderChannels();
 </script>
