@@ -3,323 +3,136 @@
 <html lang="az">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101010">
-<meta name="description" content="ANVAR IPTV — Azərbaycan televiziya kanalları">
-<title>ANVAR IPTV | Canlı Televiziya</title>
-
+<meta name="description" content="ANVAR IPTV — Azərbaycan TV kanalları">
+<title>ANVAR IPTV | Canlı TV</title>
 <style>
 *{box-sizing:border-box}
-:root{--red:#ff2638;--bg:#101010;--panel:#191919}
+:root{--red:#ff2638;--bg:#101010;--panel:#1b1b1b}
 body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
-header{padding:18px 5%;background:#181818;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:900;letter-spacing:2px}
-.brand-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:linear-gradient(145deg,#ff3545,#a90012)}
-.brand-iptv{margin-left:7px;padding:5px 8px;color:var(--red);border:1px solid var(--red);border-radius:5px;font-size:16px}
-.header-tag{color:#bbb;font-size:12px}
-main{padding:28px 5%;max-width:1200px;margin:auto}
-.hero{padding:40px 6%;background:radial-gradient(ellipse at 90% 10%,#ff263833,transparent 48%),linear-gradient(110deg,#301015,#171717 72%);border:1px solid #482126;border-radius:15px}
-.hero-label{color:#ff6975;font-size:12px;font-weight:bold;letter-spacing:1px}
-h1{font-size:clamp(34px,6vw,58px);line-height:1.12;margin:20px 0 12px}
-.hero h1 span{color:var(--red)}
-p{color:#bbb;line-height:1.7}
-.section-title{margin-top:32px;margin-bottom:8px}
-.section-subtitle{color:#888;font-size:14px}
-input{width:100%;padding:14px;border-radius:8px;border:1px solid #383838;background:#1c1c1c;color:#fff;font-size:15px}
-input:focus{outline:1px solid var(--red)}
-.search{margin:15px 0 20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px}
-.card{min-width:0;background:linear-gradient(145deg,#222,#191919);border-radius:11px;padding:14px;border:1px solid #333;transition:transform .2s}
-.card:hover{transform:translateY(-3px);border-color:#77232b}
-.logo-box{height:100px;padding:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border-radius:8px}
-.logo-box img{display:block;width:100%;height:100%;object-fit:contain}
-.logo-fallback{color:#e50914;font-size:21px;font-weight:900;text-align:center;overflow-wrap:anywhere}
-.card h3{font-size:16px;overflow-wrap:anywhere;min-height:19px}
-button{padding:12px;border:0;border-radius:7px;background:linear-gradient(100deg,#ff2638,#d90018);color:#fff;font-size:14px;font-weight:bold;cursor:pointer}
-button:hover{opacity:.88}
-button:focus-visible{outline:2px solid white;outline-offset:3px}
-.card button{width:100%}
-.player{margin-top:30px;padding:20px;background:var(--panel);border:1px solid #303030;border-radius:13px}
-.player h2{overflow-wrap:anywhere;margin-top:0}
-video{display:block;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #333;border-radius:8px}
-#status{font-size:13px;color:#bbb}
-.empty{grid-column:1/-1;padding:25px;text-align:center;color:#999;background:#191919;border:1px solid #333;border-radius:10px}
-footer{text-align:center;padding:28px 15px;margin-top:25px;border-top:1px solid #292929;color:#888;font-size:13px;line-height:1.8}
-.footer-brand{color:#fff;font-weight:bold;letter-spacing:2px}
-.footer-brand span{color:var(--red)}
-@media(max-width:480px){
-header{padding:15px 4%}
-.logo{font-size:20px;gap:8px;letter-spacing:1px}
-.brand-icon{width:36px;height:36px}
-.brand-iptv{font-size:13px;padding:5px}
-main{padding:20px 4%}
-.hero{padding:28px 6%}
-.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{padding:10px}
-.logo-box{height:85px;padding:6px}
-.player{padding:12px}
-}
+header{padding:18px 5%;background:#181818;border-bottom:1px solid #303030;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-size:25px;font-weight:900;letter-spacing:2px}
+.brand b{color:var(--red)}
+.tag{font-size:12px;color:#aaa}
+main{max-width:1200px;margin:auto;padding:25px 5%}
+.hero{padding:35px 6%;border:1px solid #512129;border-radius:14px;background:radial-gradient(ellipse at 90% 10%,#ff263833,transparent 50%),linear-gradient(110deg,#301015,#171717)}
+.hero small{color:#ff7882;font-weight:bold;letter-spacing:1px}
+h1{font-size:clamp(34px,6vw,56px);margin:18px 0 10px}
+h1 span{color:var(--red)}
+p{color:#bbb;line-height:1.6}
+input{width:100%;padding:14px;border:1px solid #383838;border-radius:8px;background:#202020;color:#fff;font-size:15px}
+.search{margin:18px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:13px}
+.card{min-width:0;padding:13px;background:linear-gradient(145deg,#252525,#191919);border:1px solid #353535;border-radius:11px}
+.card.active{border-color:var(--red)}
+.logo{height:85px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;color:#d7192d;font-size:20px;font-weight:900;overflow-wrap:anywhere}
+.card h3{font-size:15px;min-height:35px}
+button{width:100%;padding:12px;border:0;border-radius:7px;background:linear-gradient(100deg,#ff2638,#d90018);color:#fff;font-weight:bold;cursor:pointer}
+button:hover{opacity:.85}
+.player{margin-top:28px;padding:16px;background:var(--panel);border:1px solid #333;border-radius:12px}
+.player h2{font-size:20px}
+iframe{display:block;width:100%;height:auto;aspect-ratio:16/9;min-height:220px;border:0;border-radius:8px;background:#000}
+#status{font-size:13px}
+footer{text-align:center;padding:25px;color:#888;border-top:1px solid #292929}
+@media(max-width:480px){main{padding:18px 4%}.hero{padding:25px 6%}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:10px}.logo{height:75px}.brand{font-size:21px}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="logo" aria-label="ANVAR IPTV">
-    <span class="brand-icon">▶</span>
-    <span>ANVAR<span class="brand-iptv">IPTV</span></span>
-  </div>
-  <span class="header-tag">CANLI TELEVİZİYA</span>
+  <div class="brand">ANVAR <b>IPTV</b></div>
+  <span class="tag">CANLI TELEVİZİYA</span>
 </header>
 
 <main>
   <section class="hero">
-    <span class="hero-label">● ANVAR IPTV PLATFORMASI</span>
+    <small>● ANVAR IPTV PLATFORMASI</small>
     <h1>Televiziya <span>bir yerdə.</span></h1>
-    <p>Sevdiyin Azərbaycan televiziya kanallarını seç və canlı yayıma qoşul.</p>
+    <p>Azərbaycan kanallarını seç və canlı yayıma qoşul.</p>
   </section>
 
   <section class="player" id="player">
     <h2 id="now">📺 Canlı TV pleyeri</h2>
-    <video id="video" controls playsinline></video>
-    <p id="status" role="status" aria-live="polite">Kanal seç və izləməyə başla.</p>
+    <iframe id="screen" title="Canlı televiziya pleyeri"
+      src="about:blank" allow="autoplay; fullscreen; picture-in-picture"
+      allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <p id="status" role="status" aria-live="polite">İzləmək üçün kanal seç.</p>
   </section>
 
-  <h2 class="section-title">📺 Televiziya kanalları</h2>
-  <p class="section-subtitle">İzləmək istədiyin kanalı seç.</p>
-  <input class="search" id="search" type="search" placeholder="🔍 Kanal axtar..." aria-label="Kanal axtar">
+  <h2>📺 Televiziya kanalları</h2>
+  <input id="search" type="search" placeholder="🔍 Kanal axtar..." aria-label="Kanal axtar">
   <div class="grid" id="channels"></div>
 </main>
 
-<footer>
-  <div class="footer-brand">ANVAR <span>IPTV</span></div>
-  Azərbaycan televiziya kanalları · Canlı yayım
-</footer>
+<footer><b>ANVAR <span style="color:#ff2638">IPTV</span></b><br>Azərbaycan televiziya kanalları</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 <script>
 "use strict";
 
 const channels = [
-  {
-    name:"AzTV",
-    url:"https://str.yodacdn.net/azertv/index.m3u8",
-    logo:"https://commons.wikimedia.org/wiki/Special:FilePath/AzTV%20(2019).png"
-  },
-  {
-    name:"İctimai TV",
-    url:"https://live.itv.az/itv.m3u8",
-    logo:"https://commons.wikimedia.org/wiki/Special:FilePath/%C4%B0ctimai%20TV%20(2021).png"
-  },
-  {
-    name:"CBC Sport",
-    url:"https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8",
-    logo:""
-  },
-  {
-    name:"Mədəniyyət TV",
-    url:"https://str.yodacdn.net/medeniyyettele/index.m3u8",
-    logo:"https://commons.wikimedia.org/wiki/Special:FilePath/M%C9%99d%C9%99niyy%C9%99t%20TV%20(2019).png"
-  },
-  {
-    name:"Baku TV",
-    url:"https://rtmp.baku.tv/hls/bakutv.m3u8",
-    logo:"https://commons.wikimedia.org/wiki/Special:FilePath/Baku%20TV%20(2018).png"
-  },
-  {
-    name:"Kanal 35",
-    url:"https://str2.yodacdn.net/kanal35/index.m3u8",
-    logo:""
-  },
-  {
-    name:"Naxçıvan TV",
-    url:"https://str2.yodacdn.net/ntv/video.m3u8",
-    logo:"https://commons.wikimedia.org/wiki/Special:FilePath/Nax%C3%A7%C4%B1van%20TV%20(2025).png"
-  },
-  {
-    name:"Kanal S",
-    url:"https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8",
-    logo:""
-  },
-  {
-    name:"Xəzər TV",
-    url:"https://www.xezerxeber.az/stream/index.m3u8",
-    logo:""
-  },
-  {
-    name:"EL TV",
-    url:"https://live.eltv.az/live/eltv/playlist.m3u8",
-    logo:""
-  },
-  {
-    name:"Kapaz TV",
-    url:"http://85.132.78.122:8050/hls/stream/index.m3u8",
-    logo:""
-  },
-  {
-    name:"KN Music TV",
-    url:"https://cdn4.yayin.com.tr/kntv/tracks-v1a1/mono.m3u8",
-    logo:""
-  },
-  {
-    name:"AnewZ",
-    url:"https://53be5ef2d13aa.streamlock.net/cubesanewz-secure/smil:cubesanewz-secure-web.smil/playlist.m3u8",
-    logo:""
-  },
-  {
-    name:"Ayaz TV",
-    url:"https://janya-ayaztv.vgcdn.net/ptnr-WebApp/title-Ayaz_TV/v1/vglive-sk-934820/main.m3u8",
-    logo:""
-  },
-  {
-    name:"Vilayet TV",
-    url:"https://nl.livekadeh.com/hls2/vilayet.m3u8",
-    logo:""
-  },
-  {
-    name:"Alvin Channel TV",
-    url:"https://cdn10-alvinchannel.yayin.com.tr/alvinchannel/alvinchannel/playlist.m3u8",
-    logo:"https://commons.wikimedia.org/wiki/Special:FilePath/Alvin%20Channel%20TV%20-%20Azerbaijan.png"
-  },
-  {
-    name:"CBC",
-    url:"https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8",
-    logo:""
-  }
+  {name:"AzTV",logo:"AzTV",id:"az-tv-azerbaycan-tv-izle"},
+  {name:"İctimai TV",logo:"İTV",id:"ictimai-tv-canli-izle"},
+  {name:"İdman TV",logo:"İDMAN",id:"idmantv-canli-hd-izle"},
+  {name:"CBC Sport",logo:"CBC SPORT",id:"cbc-sport"},
+  {name:"ARB 24",logo:"ARB 24",id:"arb-24-az-canli"},
+  {name:"Space TV",logo:"SPACE",id:"space-tv-az-canli-izle"},
+  {name:"Mədəniyyət TV",logo:"MƏDƏNİYYƏT",id:"medeniyet-tv-az"},
+  {name:"Kanal S",logo:"KANAL S",id:"kanal-s-az"},
+  {name:"CBC Azərbaycan",logo:"CBC AZ",id:"cbc-az-tv-cenub-tv-canli"},
+  {name:"Baku TV",logo:"BAKU TV",id:"baku-tv-az-canli"},
+  {name:"Xəzər TV",logo:"XƏZƏR",id:"xezer-tv-canli-izle"},
+  {name:"AZ News TV",logo:"AZ NEWS",id:"az-news-tv-canli"}
 ];
 
-const grid = document.getElementById("channels");
-const video = document.getElementById("video");
-const statusText = document.getElementById("status");
-const nowPlaying = document.getElementById("now");
-let hls = null;
-let playbackId = 0;
+const grid=document.getElementById("channels");
+const screen=document.getElementById("screen");
+const now=document.getElementById("now");
+const status=document.getElementById("status");
+
+function play(c,card){
+  screen.src="https://www.ecanlitvizle.live/embed.php?kanal="+encodeURIComponent(c.id);
+  now.textContent="📺 "+c.name;
+  status.textContent="Pleyer yüklənir. Yayım açılmasa, kanalın mənbəyi əlçatmaz ola bilər.";
+  document.querySelectorAll(".card").forEach(x=>x.classList.remove("active"));
+  card.classList.add("active");
+  document.getElementById("player").scrollIntoView({behavior:"smooth",block:"start"});
+}
 
 function render(){
-  const q = document.getElementById("search").value.toLocaleLowerCase("az");
+  const q=document.getElementById("search").value.toLocaleLowerCase("az");
   grid.replaceChildren();
 
-  const filtered = channels.filter(c =>
-    c.name.toLocaleLowerCase("az").includes(q)
-  );
+  const found=channels.filter(c=>c.name.toLocaleLowerCase("az").includes(q));
 
-  if(!filtered.length){
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "Kanal tapılmadı.";
+  if(!found.length){
+    const empty=document.createElement("p");
+    empty.textContent="Kanal tapılmadı.";
     grid.append(empty);
     return;
   }
 
-  filtered.forEach(c => {
-    const card = document.createElement("div");
-    card.className = "card";
+  found.forEach(c=>{
+    const card=document.createElement("article");
+    card.className="card";
 
-    const logo = document.createElement("div");
-    logo.className = "logo-box";
+    const logo=document.createElement("div");
+    logo.className="logo";
+    logo.textContent=c.logo;
 
-    function showFallback(){
-      logo.replaceChildren();
-      logo.style.background = "linear-gradient(145deg,#292929,#171717)";
-      const label = document.createElement("span");
-      label.className = "logo-fallback";
-      label.textContent = c.name;
-      logo.append(label);
-    }
+    const title=document.createElement("h3");
+    title.textContent=c.name;
 
-    if(c.logo){
-      const img = document.createElement("img");
-      img.src = c.logo;
-      img.alt = c.name + " loqosu";
-      img.loading = "lazy";
-      img.referrerPolicy = "no-referrer";
-      img.onerror = showFallback;
-      logo.append(img);
-    }else{
-      showFallback();
-    }
-
-    const title = document.createElement("h3");
-    title.textContent = c.name;
-
-    const btn = document.createElement("button");
-    btn.textContent = "▶ İzlə";
-    btn.setAttribute("aria-label", c.name + " kanalını izlə");
-    btn.addEventListener("click", () => playChannel(c));
+    const btn=document.createElement("button");
+    btn.textContent="▶ İzlə";
+    btn.setAttribute("aria-label",c.name+" kanalını izlə");
+    btn.addEventListener("click",()=>play(c,card));
 
     card.append(logo,title,btn);
     grid.append(card);
   });
 }
 
-function stop(){
-  playbackId++;
-  if(hls){hls.destroy();hls=null;}
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
-}
-
-function playChannel(c){
-  stop();
-  const currentId = playbackId;
-  nowPlaying.textContent = c.name;
-  statusText.textContent = "Yayım yüklənir...";
-
-  document.getElementById("player").scrollIntoView({
-    behavior:"smooth",block:"start"
-  });
-
-  function showStatus(message){
-    if(currentId === playbackId) statusText.textContent = message;
-  }
-
-  if(window.Hls && Hls.isSupported()){
-    const player = new Hls();
-    hls = player;
-
-    player.on(Hls.Events.ERROR,(event,data)=>{
-      if(data.fatal && currentId === playbackId){
-        showStatus("Yayım açıla bilmədi. Link işləməyə və ya yayım məhdudiyyətli ola bilər.");
-        player.destroy();
-        if(hls === player) hls = null;
-      }
-    });
-
-    player.on(Hls.Events.MANIFEST_PARSED,()=>{
-      if(currentId !== playbackId) return;
-      video.play().then(()=>{
-        showStatus("Canlı yayım oynadılır.");
-      }).catch(()=>{
-        showStatus("Yayımı başlatmaq üçün Play düyməsinə bas.");
-      });
-    });
-
-    player.loadSource(c.url);
-    player.attachMedia(video);
-  }else if(video.canPlayType("application/vnd.apple.mpegurl")){
-    video.src = c.url;
-    video.play().then(()=>{
-      showStatus("Canlı yayım oynadılır.");
-    }).catch(()=>{
-      showStatus("Yayımı başlatmaq üçün Play düyməsinə bas.");
-    });
-  }else{
-    showStatus("Bu brauzer HLS yayımını dəstəkləmir.");
-  }
-}
-
 document.getElementById("search").addEventListener("input",render);
-
-video.addEventListener("playing",()=>{
-  statusText.textContent = "Canlı yayım oynadılır.";
-});
-
-video.addEventListener("error",()=>{
-  if(video.currentSrc){
-    statusText.textContent = "Video açıla bilmədi. Yayım müvəqqəti əlçatmaz ola bilər.";
-  }
-});
-
 render();
 </script>
 </body>
