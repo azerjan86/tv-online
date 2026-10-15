@@ -1,87 +1,379 @@
 
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b12">
+<title>ANVAR IPTV — Canlı TV</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #090b12;
+  --panel: #141824;
+  --line: #282d3b;
+  --red: #f04452;
+  --muted: #9ba3b5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #f8fafc;
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px max(18px, calc((100% - 1200px)/2));
+  background: #0d1019ee;
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+}
+.brand-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--red);
+  font-size: 21px;
+}
+.brand { font-size: 19px; font-weight: 850; }
+.subtitle { color: var(--muted); font-size: 11px; margin-top: 3px; }
+.live { margin-left: auto; color: #ff737e; font-size: 12px; }
+main { max-width: 1200px; margin: auto; padding: 24px 18px 50px; }
+h1 { font-size: clamp(24px, 4vw, 36px); margin: 0 0 8px; }
+.muted { color: var(--muted); }
+.player-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(240px, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  min-width: 0;
+}
+video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #030407;
+  border-radius: 12px;
+}
+.now { margin: 16px 0 6px; font-size: 19px; font-weight: 750; }
+.status { font-size: 13px; color: var(--muted); }
+.controls { display: flex; gap: 10px; margin-top: 14px; }
+button, input {
+  font: inherit;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+button {
+  background: #252b3a;
+  color: white;
+  padding: 10px 13px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--red); }
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+.primary { background: var(--red); border-color: var(--red); }
+input {
+  background: #0d111b;
+  color: white;
+  padding: 12px;
+  width: 100%;
+  min-width: 0;
+}
+.channel-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  max-height: 430px;
+  overflow-y: auto;
+}
+.channel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  width: 100%;
+  padding: 10px;
+  background: #1b2030;
+}
+.channel.active { border-color: var(--red); background: #30202b; }
+.logo {
+  display: grid;
+  place-items: center;
+  flex: 0 0 43px;
+  height: 43px;
+  border-radius: 10px;
+  background: #303749;
+  font-weight: 800;
+  font-size: 11px;
+}
+.channel-name { flex: 1; font-weight: 650; }
+.star { color: #ffd166; font-size: 18px; }
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.section-head h2 { font-size: 19px; margin: 0; }
+footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .player-layout { grid-template-columns: 1fr; }
+  main { padding: 20px 12px 35px; }
+  header { padding: 12px; }
+  .panel { padding: 12px; }
+  .channel-list { max-height: 380px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand-icon">▶</div>
+  <div>
+    <div class="brand">ANVAR IPTV</div>
+    <div class="subtitle">AZƏRBAYCAN • CANLI TV</div>
+  </div>
+  <div class="live">● CANLI TV</div>
+</header>
+
+<main>
+  <h1>Televiziyaya xoş gəlmisiniz</h1>
+  <div class="muted">Sevdiyiniz kanalları canlı izləyin.</div>
+
+  <div class="player-layout">
+    <section class="panel">
+      <video id="video" controls playsinline
+        preload="none"></video>
+      <div class="now" id="now">Kanal seçin</div>
+      <div class="status" id="status" role="status"
+        aria-live="polite">İzləməyə başlamaq üçün kanal seçin.</div>
+      <div class="controls">
+        <button class="primary" id="play">▶ İzlə</button>
+        <button id="stop">■ Dayandır</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>Kanallar</h2>
+        <span class="muted" id="count"></span>
+      </div>
+      <div style="margin-top:14px">
+        <input id="search" type="search"
+          placeholder="Kanal axtar..." aria-label="Kanal axtar">
+      </div>
+      <div class="controls">
+        <button class="primary" id="all">Hamısı</button>
+        <button id="favorites">★ Seçilmişlər</button>
+      </div>
+      <div class="channel-list" id="channels"></div>
+    </section>
+  </div>
+</main>
+
+<footer>ANVAR IPTV · Canlı yayım platforması</footer>
+
+<script>
 const channels = [
-  {
-    name: "Xəzər TV",
-    logo: "XƏZƏR",
-    image: "https://www.google.com/s2/favicons?domain=xezerxeber.az&sz=128",
-    url: "https://xezerxeber.az/stream/stream.m3u8"
-  },
-  {
-    name: "Xəzər TV (ehtiyat)",
-    logo: "XƏZƏR",
-    image: "https://www.google.com/s2/favicons?domain=xezerxeber.az&sz=128",
-    url: "https://stream.yayim.az/TV_AZ_Xazar/tracks-v1a1/mono.ts.m3u8"
-  },
-  {
-    name: "AzTV",
-    logo: "AzTV",
-    image: "https://www.google.com/s2/favicons?domain=aztv.az&sz=128",
-    url: "https://str2.yodacdn.net/azertv/tracks-v1a1/mono.ts.m3u8"
-  },
-  {
-    name: "Mədəniyyət TV",
-    logo: "MƏDƏNİYYƏT",
-    image: "https://www.google.com/s2/favicons?domain=medeniyyet.az&sz=128",
-    url: "https://str2.yodacdn.net/medeniyyettele/index.m3u8"
-  },
-  {
-    name: "ATV",
-    logo: "ATV",
-    image: "https://www.google.com/s2/favicons?domain=atv.az&sz=128",
-    url: "https://lives.atv.az:5443/ATV_TV_STREAM/streams/atvcanli.m3u8"
-  },
-  {
-    name: "Kanal S",
-    logo: "KANAL S",
-    image: "https://www.google.com/s2/favicons?domain=atv.az&sz=128",
-    url: "https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8"
-  },
-  {
-    name: "Baku TV",
-    logo: "BAKU TV",
-    image: "https://www.google.com/s2/favicons?domain=baku.tv&sz=128",
-    url: "https://rtmp.baku.tv/hls/bakutv_720p.m3u8"
-  },
-  {
-    name: "Kanal 8",
-    logo: "KANAL 8",
-    image: "",
-    url: "https://telecast.srthub.net/hls/20850e6a-19a8-df31-6690-7e8af2cdf531/streams/v3/play.m3u8"
-  },
-  {
-    name: "APA TV",
-    logo: "APA TV",
-    image: "https://www.google.com/s2/favicons?domain=apa.az&sz=128",
-    url: "http://stream.apa.tv/apastream/video1_stream.m3u8"
-  },
-  {
-    name: "Naxçıvan TV",
-    logo: "NTV",
-    image: "https://www.google.com/s2/favicons?domain=ntv.az&sz=128",
-    url: "https://str2.yodacdn.net/ntv/tracks-v1a1/mono.ts.m3u8"
-  },
-  {
-    name: "Dünya TV",
-    logo: "DÜNYA TV",
-    image: "",
-    url: "https://stream.dunyatv.az/live/dunyatv.m3u8"
-  },
-  {
-    name: "Radio Telekom TV",
-    logo: "RT",
-    image: "",
-    url: "https://a8.radyotelekom.com.tr:3276/stream/play.m3u8"
-  },
-  {
-    name: "İctimai TV",
-    logo: "İTV",
-    image: "https://www.google.com/s2/favicons?domain=itv.az&sz=128",
-    url: "https://live.itv.az/itv.m3u8"
-  },
-  {
-    name: "CBC Sport",
-    logo: "CBC SPORT",
-    image: "https://www.google.com/s2/favicons?domain=cbcsport.az&sz=128",
-    url: "https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8"
-  }
+  {name:"Xəzər TV", logo:"XƏZƏR",
+   url:"https://xezerxeber.az/stream/stream.m3u8"},
+  {name:"Xəzər TV (ehtiyat)", logo:"XƏZƏR",
+   url:"https://stream.yayim.az/TV_AZ_Xazar/tracks-v1a1/mono.ts.m3u8"},
+  {name:"AzTV", logo:"AzTV",
+   url:"https://str2.yodacdn.net/azertv/tracks-v1a1/mono.ts.m3u8"},
+  {name:"Mədəniyyət TV", logo:"MƏDƏNİYYƏT",
+   url:"https://str2.yodacdn.net/medeniyyettele/index.m3u8"},
+  {name:"ATV", logo:"ATV",
+   url:"https://lives.atv.az:5443/ATV_TV_STREAM/streams/atvcanli.m3u8"},
+  {name:"Kanal S", logo:"KANAL S",
+   url:"https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8"},
+  {name:"Baku TV", logo:"BAKU TV",
+   url:"https://rtmp.baku.tv/hls/bakutv_720p.m3u8"},
+  {name:"Kanal 8", logo:"K8",
+   url:"https://telecast.srthub.net/hls/20850e6a-19a8-df31-6690-7e8af2cdf531/streams/v3/play.m3u8"},
+  {name:"APA TV", logo:"APA",
+   url:"http://stream.apa.tv/apastream/video1_stream.m3u8"},
+  {name:"Naxçıvan TV", logo:"NTV",
+   url:"https://str2.yodacdn.net/ntv/tracks-v1a1/mono.ts.m3u8"},
+  {name:"Dünya TV", logo:"DÜNYA",
+   url:"https://stream.dunyatv.az/live/dunyatv.m3u8"},
+  {name:"Radio Telekom TV", logo:"RT",
+   url:"https://a8.radyotelekom.com.tr:3276/stream/play.m3u8"},
+  {name:"İctimai TV", logo:"İTV",
+   url:"https://live.itv.az/itv.m3u8"},
+  {name:"CBC Sport", logo:"CBC",
+   url:"https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8"}
 ];
+
+const $ = id => document.getElementById(id);
+const video = $("video");
+let hls = null;
+let current = null;
+let onlyFavorites = false;
+let favorites = new Set();
+
+try {
+  favorites = new Set(JSON.parse(
+    localStorage.getItem("anvar-favorites") || "[]"
+  ));
+} catch (_) {}
+
+function setStatus(message) {
+  $("status").textContent = message;
+}
+
+function stopPlayer() {
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+}
+
+function playChannel(channel) {
+  current = channel;
+  stopPlayer();
+  $("now").textContent = channel.name;
+  setStatus("Yayım yüklənir...");
+  renderChannels();
+
+  if (window.Hls && Hls.isSupported()) {
+    hls = new Hls();
+    hls.loadSource(channel.url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      setStatus("Yayım hazırdır. İzləməyə başlaya bilərsiniz.");
+    });
+    hls.on(Hls.Events.ERROR, (_, data) => {
+      if (data.fatal) {
+        setStatus("Yayım açılmadı. Mənbə bloklanmış və ya offline ola bilər.");
+        hls.destroy();
+        hls = null;
+      }
+    });
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.src = channel.url;
+    video.addEventListener("error", () => {
+      setStatus("Yayım açılmadı. Başqa kanal sınayın.");
+    }, {once:true});
+  } else {
+    setStatus("Brauzer HLS yayımını dəstəkləmir.");
+    return;
+  }
+
+  video.play().catch(() => {
+    setStatus("Yayımı başlatmaq üçün İzlə düyməsinə toxunun.");
+  });
+}
+
+function toggleFavorite(channel) {
+  if (favorites.has(channel.name)) favorites.delete(channel.name);
+  else favorites.add(channel.name);
+
+  try {
+    localStorage.setItem("anvar-favorites",
+      JSON.stringify([...favorites]));
+  } catch (_) {}
+  renderChannels();
+}
+
+function renderChannels() {
+  const query = $("search").value.trim().toLocaleLowerCase();
+  const filtered = channels.filter(ch =>
+    ch.name.toLocaleLowerCase().includes(query) &&
+    (!onlyFavorites || favorites.has(ch.name))
+  );
+
+  $("count").textContent = filtered.length + " kanal";
+  $("channels").replaceChildren();
+
+  if (!filtered.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Kanal tapılmadı.";
+    $("channels").append(empty);
+    return;
+  }
+
+  filtered.forEach(ch => {
+    const row = document.createElement("button");
+    row.className = "channel" +
+      (current === ch ? " active" : "");
+    row.setAttribute("aria-label", "İzlə: " + ch.name);
+
+    const logo = document.createElement("span");
+    logo.className = "logo";
+    logo.textContent = ch.logo;
+
+    const name = document.createElement("span");
+    name.className = "channel-name";
+    name.textContent = ch.name;
+
+    const star = document.createElement("span");
+    star.className = "star";
+    star.textContent = favorites.has(ch.name) ? "★" : "☆";
+    star.setAttribute("role", "button");
+    star.setAttribute("aria-label", "Seçilmişlərə əlavə et");
+
+    star.addEventListener("click", event => {
+      event.stopPropagation();
+      toggleFavorite(ch);
+    });
+
+    row.append(logo, name, star);
+    row.addEventListener("click", () => playChannel(ch));
+    $("channels").append(row);
+  });
+}
+
+$("search").addEventListener("input", renderChannels);
+$("all").addEventListener("click", () => {
+  onlyFavorites = false;
+  $("all").classList.add("primary");
+  $("favorites").classList.remove("primary");
+  renderChannels();
+});
+$("favorites").addEventListener("click", () => {
+  onlyFavorites = true;
+  $("favorites").classList.add("primary");
+  $("all").classList.remove("primary");
+  renderChannels();
+});
+$("play").addEventListener("click", () => {
+  if (current) playChannel(current);
+  else setStatus("Əvvəlcə siyahıdan kanal seçin.");
+});
+$("stop").addEventListener("click", () => {
+  stopPlayer();
+  setStatus("Yayım dayandırıldı.");
+});
+
+renderChannels();
+</script>
+</body>
+</html>
