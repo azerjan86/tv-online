@@ -1,7 +1,8 @@
 
 <!DOCTYPE html>
 <html lang="az">
-<head>
+<head><link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0A0F1C">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090b12">
@@ -21,7 +22,13 @@
     }
 
     * { box-sizing: border-box; }
-
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js");
+  });
+}
+</script>
     body {
       margin: 0;
       background:
