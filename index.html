@@ -5,76 +5,390 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101010">
-<meta name="description" content="TV ONLINE AZ — Azərbaycan televiziya kanallarını canlı izləyin.">
-<title>TV ONLINE AZ</title>
+<meta name="description" content="ANVAR IPTV — Azərbaycan televiziya kanallarını canlı izləyin.">
+<title>ANVAR IPTV | Canlı Televiziya</title>
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#101010;color:#fff;font-family:Arial,sans-serif}
-header{padding:20px 5%;background:#181818;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.logo{font-size:25px;font-weight:bold;color:#e50914}
-main{padding:25px 5%;max-width:1200px;margin:auto}
-.hero{padding:40px 5%;background:linear-gradient(110deg,#401015,#171717);border-radius:12px}
-h1{font-size:clamp(32px,6vw,55px);margin:10px 0}
-p{color:#bbb;line-height:1.6}
-button{padding:12px;border-radius:6px;border:0;font-size:15px;background:#e50914;color:white;cursor:pointer;font-weight:bold}
-button:hover{opacity:.85}
-.search{margin:22px 0}
-input{padding:12px;border-radius:6px;border:1px solid #444;background:#252525;color:white;width:100%;font-size:15px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px}
-.card{background:#202020;border-radius:9px;padding:16px;border:1px solid #333}
-.logo-box{min-height:75px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:22px;font-weight:bold;color:#ff535b;overflow-wrap:anywhere}
-.card h3{font-size:16px;overflow-wrap:anywhere}
-.card button{width:100%;font-size:13px}
-.player{margin-top:30px;background:#1d1d1d;padding:18px;border-radius:10px}
-video{display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:6px}
-#status{font-size:13px;color:#bbb}
-footer{text-align:center;padding:25px;color:#999}
+
+:root{
+  --red:#ff2638;
+  --bg:#101010;
+  --panel:#191919;
+  --card:#202020;
+  --muted:#aaa;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+
+header{
+  padding:18px 5%;
+  background:rgba(20,20,20,.97);
+  border-bottom:1px solid #292929;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.brand-icon{
+  width:43px;
+  height:43px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  color:#fff;
+  background:linear-gradient(145deg,#ff3545,#a90012);
+  box-shadow:0 0 22px rgba(255,38,56,.3);
+  font-size:20px;
+}
+
+.brand-name{
+  color:#fff;
+  text-shadow:0 0 15px rgba(255,255,255,.12);
+}
+
+.brand-iptv{
+  display:inline-block;
+  margin-left:5px;
+  padding:5px 8px;
+  color:var(--red);
+  border:1px solid var(--red);
+  border-radius:5px;
+  font-size:17px;
+  letter-spacing:3px;
+  box-shadow:0 0 14px rgba(255,38,56,.13);
+}
+
+.header-tag{
+  color:#bbb;
+  font-size:13px;
+  letter-spacing:1px;
+}
+
+main{
+  padding:28px 5%;
+  max-width:1200px;
+  margin:auto;
+}
+
+.hero{
+  position:relative;
+  overflow:hidden;
+  padding:48px 6%;
+  background:
+    radial-gradient(ellipse at 90% 10%,rgba(255,38,56,.2),transparent 48%),
+    linear-gradient(110deg,#301015,#171717 72%);
+  border:1px solid #482126;
+  border-radius:16px;
+}
+
+.hero-label{
+  display:inline-block;
+  padding:8px 12px;
+  color:#ff6975;
+  background:rgba(255,38,56,.1);
+  border:1px solid rgba(255,38,56,.3);
+  border-radius:30px;
+  font-size:12px;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+h1{
+  font-size:clamp(34px,6vw,58px);
+  line-height:1.1;
+  margin:20px 0 12px;
+  letter-spacing:-1px;
+}
+
+.hero h1 span{
+  color:var(--red);
+  text-shadow:0 0 25px rgba(255,38,56,.2);
+}
+
+p{
+  color:#bbb;
+  line-height:1.7;
+}
+
+.hero p{
+  max-width:560px;
+}
+
+.section-title{
+  margin-top:32px;
+  margin-bottom:8px;
+  font-size:24px;
+}
+
+.section-subtitle{
+  margin-top:0;
+  font-size:14px;
+  color:#888;
+}
+
+input{
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #383838;
+  background:#1c1c1c;
+  color:white;
+  width:100%;
+  font-size:15px;
+  outline:none;
+}
+
+input:focus{
+  border-color:var(--red);
+  box-shadow:0 0 0 3px rgba(255,38,56,.1);
+}
+
+.search{
+  margin:15px 0 20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:linear-gradient(145deg,#222,#191919);
+  border-radius:11px;
+  padding:16px;
+  border:1px solid #333;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  border-color:#77232b;
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+
+.logo-box{
+  min-height:75px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+  color:#ff535b;
+  overflow-wrap:anywhere;
+}
+
+.card h3{
+  font-size:16px;
+  overflow-wrap:anywhere;
+  min-height:19px;
+}
+
+button{
+  padding:12px;
+  border-radius:7px;
+  border:0;
+  font-size:14px;
+  background:linear-gradient(100deg,#ff2638,#d90018);
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+  transition:opacity .2s,transform .2s;
+}
+
+button:hover{
+  opacity:.9;
+  transform:translateY(-1px);
+}
+
+button:focus-visible{
+  outline:2px solid white;
+  outline-offset:3px;
+}
+
+.card button{
+  width:100%;
+}
+
+.player{
+  margin-top:30px;
+  background:#191919;
+  padding:20px;
+  border:1px solid #303030;
+  border-radius:13px;
+}
+
+.player h2{
+  margin-top:0;
+  overflow-wrap:anywhere;
+}
+
+.player video{
+  display:block;
+  width:100%;
+  aspect-ratio:16/9;
+  background:#000;
+  border:1px solid #333;
+  border-radius:8px;
+}
+
+#status{
+  font-size:13px;
+  color:#bbb;
+  margin-bottom:0;
+}
+
+.empty{
+  grid-column:1/-1;
+  padding:25px;
+  text-align:center;
+  color:#999;
+  background:#191919;
+  border:1px solid #333;
+  border-radius:10px;
+}
+
+footer{
+  text-align:center;
+  padding:28px 15px;
+  margin-top:25px;
+  border-top:1px solid #292929;
+  color:#888;
+  font-size:13px;
+  line-height:1.8;
+}
+
+.footer-brand{
+  color:white;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.footer-brand span{
+  color:var(--red);
+}
+
 @media(max-width:480px){
-  header{padding:16px 4%;flex-wrap:wrap}
-  .logo{font-size:21px}
-  main{padding:20px 4%}
-  .hero{padding:28px 5%}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .card{padding:12px}
-  .player{padding:12px}
+  header{
+    padding:15px 4%;
+  }
+
+  .logo{
+    font-size:22px;
+    gap:8px;
+    letter-spacing:1px;
+  }
+
+  .brand-icon{
+    width:37px;
+    height:37px;
+    font-size:17px;
+  }
+
+  .brand-iptv{
+    font-size:14px;
+    letter-spacing:2px;
+    padding:5px;
+  }
+
+  .header-tag{
+    font-size:11px;
+  }
+
+  main{
+    padding:20px 4%;
+  }
+
+  .hero{
+    padding:30px 6%;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .card{
+    padding:12px;
+  }
+
+  .player{
+    padding:12px;
+  }
+
+  .section-title{
+    font-size:22px;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <header>
-  <div class="logo">▶ TV ONLINE AZ</div>
-  <span>Canlı televiziya</span>
+  <div class="logo" aria-label="ANVAR IPTV">
+    <span class="brand-icon">▶</span>
+    <span>
+      <span class="brand-name">ANVAR</span><span class="brand-iptv">IPTV</span>
+    </span>
+  </div>
+  <span class="header-tag">CANLI TELEVİZİYA</span>
 </header>
 
 <main>
   <section class="hero">
-    <p>AZƏRBAYCAN IPTV PLATFORMASI</p>
-    <h1>Televiziya bir yerdə.</h1>
-    <p>Sevdiyin kanalı seç və canlı izlə.</p>
+    <span class="hero-label">● ANVAR IPTV PLATFORMASI</span>
+    <h1>Televiziya <span>bir yerdə.</span></h1>
+    <p>Sevdiyin Azərbaycan televiziya kanallarını seç, canlı yayıma qoşul və izləməyin zövqünü yaşa.</p>
   </section>
 
   <section class="player" id="player">
-    <h2 id="now">Canlı TV pleyeri</h2>
+    <h2 id="now">📺 Canlı TV pleyeri</h2>
     <video id="video" controls playsinline></video>
-    <p id="status" role="status" aria-live="polite">Kanal seç və izləməyə başla.</p>
+    <p id="status" role="status" aria-live="polite">
+      Kanal seç və izləməyə başla.
+    </p>
   </section>
 
-  <h2>📺 Kanallar</h2>
+  <h2 class="section-title">📺 Televiziya kanalları</h2>
+  <p class="section-subtitle">İzləmək istədiyin kanalı seç.</p>
+
   <input
     class="search"
     id="search"
     type="search"
-    placeholder="Kanal axtar..."
+    placeholder="🔍 Kanal axtar..."
     aria-label="Kanal axtar"
   >
+
   <div class="grid" id="channels"></div>
 </main>
 
-<footer>TV ONLINE AZ · IPTV Player</footer>
+<footer>
+  <div class="footer-brand">ANVAR <span>IPTV</span></div>
+  Azərbaycan televiziya kanalları · Canlı yayım
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+
 <script>
 const channels = [
   {name:"AzTV",url:"https://str.yodacdn.net/azertv/index.m3u8"},
@@ -98,27 +412,37 @@ function render(){
   const q = document.getElementById("search").value.toLocaleLowerCase("az");
   grid.replaceChildren();
 
-  channels
-    .filter(c => c.name.toLocaleLowerCase("az").includes(q))
-    .forEach(c => {
-      const card = document.createElement("div");
-      card.className = "card";
+  const filtered = channels.filter(c =>
+    c.name.toLocaleLowerCase("az").includes(q)
+  );
 
-      const logo = document.createElement("div");
-      logo.className = "logo-box";
-      logo.textContent = c.name;
+  if(!filtered.length){
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "Kanal tapılmadı.";
+    grid.append(empty);
+    return;
+  }
 
-      const title = document.createElement("h3");
-      title.textContent = c.name;
+  filtered.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-      const btn = document.createElement("button");
-      btn.textContent = "▶ İzlə";
-      btn.setAttribute("aria-label", c.name + " kanalını izlə");
-      btn.onclick = () => playChannel(c);
+    const logo = document.createElement("div");
+    logo.className = "logo-box";
+    logo.textContent = c.name;
 
-      card.append(logo, title, btn);
-      grid.append(card);
-    });
+    const title = document.createElement("h3");
+    title.textContent = c.name;
+
+    const btn = document.createElement("button");
+    btn.textContent = "▶ İzlə";
+    btn.setAttribute("aria-label", c.name + " kanalını izlə");
+    btn.onclick = () => playChannel(c);
+
+    card.append(logo, title, btn);
+    grid.append(card);
+  });
 }
 
 function stop(){
@@ -146,35 +470,38 @@ function playChannel(c){
   if(window.Hls && Hls.isSupported()){
     hls = new Hls();
 
-    hls.loadSource(c.url);
-    hls.attachMedia(video);
-
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      video.play()
-        .then(() => {
-          statusText.textContent = "Canlı yayım oynadılır.";
-        })
-        .catch(() => {
-          statusText.textContent = "Yayımı başlatmaq üçün Play düyməsinə bas.";
-        });
-    });
-
     hls.on(Hls.Events.ERROR, (event, data) => {
       if(data.fatal){
         statusText.textContent =
-          "Yayım açıla bilmədi. Kanalın linki və ya yayım məhdudiyyətlərini yoxlamaq lazımdır.";
+          "Yayım açıla bilmədi. Kanal müvəqqəti əlçatmaz ola bilər.";
 
         hls.destroy();
         hls = null;
       }
     });
+
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      video.play().then(() => {
+        statusText.textContent = "Canlı yayım oynadılır.";
+      }).catch(() => {
+        statusText.textContent =
+          "Yayımı başlatmaq üçün Play düyməsinə bas.";
+      });
+    });
+
+    hls.loadSource(c.url);
+    hls.attachMedia(video);
+
   }else if(video.canPlayType("application/vnd.apple.mpegurl")){
     video.src = c.url;
 
-    video.play().catch(() => {
+    video.play().then(() => {
+      statusText.textContent = "Canlı yayım oynadılır.";
+    }).catch(() => {
       statusText.textContent =
         "Yayımı başlatmaq üçün Play düyməsinə bas.";
     });
+
   }else{
     statusText.textContent =
       "Bu brauzer HLS yayımını dəstəkləmir.";
@@ -196,5 +523,6 @@ video.addEventListener("error", () => {
 
 render();
 </script>
+
 </body>
 </html>
