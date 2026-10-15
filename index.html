@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101010">
-<meta name="description" content="ANVAR IPTV — Azərbaycan televiziya kanalları">
+<meta name="description" content="ANVAR IPTV — Azərbaycan canlı TV">
 <title>ANVAR IPTV | Canlı TV</title>
 <style>
 *{box-sizing:border-box}
@@ -22,26 +22,20 @@ h1{font-size:clamp(34px,6vw,56px);margin:18px 0 10px}
 h1 span{color:var(--red)}
 p{color:#bbb;line-height:1.6}
 input{width:100%;padding:14px;border:1px solid #383838;border-radius:8px;background:#202020;color:#fff;font-size:15px}
-input:focus{outline:2px solid var(--red)}
 .search{margin:18px 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:13px}
 .card{min-width:0;padding:13px;background:linear-gradient(145deg,#252525,#191919);border:1px solid #353535;border-radius:11px}
+.card.active{border-color:var(--red)}
 .logo{height:85px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;color:#d7192d;font-size:20px;font-weight:900;overflow-wrap:anywhere}
 .card h3{font-size:15px;min-height:35px}
-button,.watch{display:block;width:100%;padding:12px;border:0;border-radius:7px;background:linear-gradient(100deg,#ff2638,#d90018);color:#fff;font-weight:bold;text-align:center;text-decoration:none;cursor:pointer;font-size:14px}
-button:hover,.watch:hover{opacity:.85}
+button{display:block;width:100%;padding:12px;border:0;border-radius:7px;background:linear-gradient(100deg,#ff2638,#d90018);color:#fff;font-weight:bold;cursor:pointer}
+button:hover{opacity:.85}
 .player{margin-top:28px;padding:16px;background:var(--panel);border:1px solid #333;border-radius:12px}
-.player h2{font-size:20px}
+video{display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:8px}
+#status{font-size:13px}
 footer{text-align:center;padding:25px;color:#888;border-top:1px solid #292929}
 .empty{grid-column:1/-1;text-align:center;padding:25px;color:#aaa}
-@media(max-width:480px){
- main{padding:18px 4%}
- .hero{padding:25px 6%}
- .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- .card{padding:10px}
- .logo{height:75px}
- .brand{font-size:21px}
-}
+@media(max-width:480px){main{padding:18px 4%}.hero{padding:25px 6%}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:10px}.logo{height:75px}.brand{font-size:21px}}
 </style>
 </head>
 <body>
@@ -54,12 +48,15 @@ footer{text-align:center;padding:25px;color:#888;border-top:1px solid #292929}
   <section class="hero">
     <small>● ANVAR IPTV PLATFORMASI</small>
     <h1>Televiziya <span>bir yerdə.</span></h1>
-    <p>Azərbaycan kanallarını seç və canlı yayıma qoşul.</p>
+    <p>Azərbaycan kanallarını seç və canlı izlə.</p>
   </section>
 
   <section class="player" id="player">
-    <h2 id="now">📺 ANVAR IPTV</h2>
-    <p id="status">Kanal seç. Yayımın açılması üçün kanalın səhifəsi yeni pəncərədə açılacaq.</p>
+    <h2 id="now">📺 ANVAR IPTV — Canlı TV</h2>
+    <video id="video" controls playsinline></video>
+    <p id="status" role="status" aria-live="polite">
+      İzləmək üçün kanal seç.
+    </p>
   </section>
 
   <h2>📺 Televiziya kanalları</h2>
@@ -71,73 +68,178 @@ footer{text-align:center;padding:25px;color:#888;border-top:1px solid #292929}
 <footer><b>ANVAR <span style="color:#ff2638">IPTV</span></b><br>
 Azərbaycan televiziya kanalları</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 <script>
 "use strict";
 
 const channels = [
-  {name:"Xəzər TV",logo:"XƏZƏR",url:"https://canlitv.com/xezer-tv"},
-  {name:"Az TV",logo:"AzTV",url:"https://canlitv.com/az-tv"},
-  {name:"İctimai TV",logo:"İTV",url:"https://canlitv.com/ictimai-tv"},
-  {name:"İdman TV",logo:"İDMAN TV",url:"https://canlitv.com/idman-tv"},
-  {name:"CBC Sport",logo:"CBC SPORT",url:"https://canlitv.com/cbc-sport-izle"},
-  {name:"ARB TV",logo:"ARB",url:"https://canlitv.com/arb-tv"},
-  {name:"ARB 24",logo:"ARB 24",url:"https://canlitv.com/arb-24-tv"},
-  {name:"Space TV",logo:"SPACE",url:"https://canlitv.com/space-tv"},
-  {name:"Mədəniyyət TV",logo:"MƏDƏNİYYƏT",url:"https://canlitv.com/medeniyet-tv"},
-  {name:"Kanal S",logo:"KANAL S",url:"https://canlitv.com/kanal-s-azerbaycan"},
-  {name:"CBC Azərbaycan",logo:"CBC",url:"https://canlitv.com/cbc-tv"},
-  {name:"Baku TV",logo:"BAKU TV",url:"https://canlitv.com/baku-tv"}
+  {
+    name:"AzTV", logo:"AzTV",
+    url:"https://str.yodacdn.net/azertv/index.m3u8"
+  },
+  {
+    name:"İctimai TV", logo:"İTV",
+    url:"https://live.itv.az/itv.m3u8"
+  },
+  {
+    name:"CBC Sport", logo:"CBC SPORT",
+    url:"https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8"
+  },
+  {
+    name:"Baku TV", logo:"BAKU TV",
+    url:"https://rtmp.baku.tv/hls/bakutv.m3u8"
+  },
+  {
+    name:"Mədəniyyət TV", logo:"MƏDƏNİYYƏT",
+    url:"https://str.yodacdn.net/medeniyyettele/index.m3u8"
+  },
+  {
+    name:"Naxçıvan TV", logo:"NTV",
+    url:"https://str2.yodacdn.net/ntv/video.m3u8"
+  },
+  {
+    name:"Kanal 35", logo:"KANAL 35",
+    url:"https://str2.yodacdn.net/kanal35/index.m3u8"
+  },
+  {
+    name:"Kanal S", logo:"KANAL S",
+    url:"https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8"
+  },
+  {
+    name:"Xəzər TV", logo:"XƏZƏR",
+    url:"https://www.xezerxeber.az/stream/index.m3u8"
+  },
+  {
+    name:"EL TV", logo:"EL TV",
+    url:"https://live.eltv.az/live/eltv/playlist.m3u8"
+  }
 ];
 
-const grid=document.getElementById("channels");
-const search=document.getElementById("search");
+const grid = document.getElementById("channels");
+const video = document.getElementById("video");
+const statusText = document.getElementById("status");
+const now = document.getElementById("now");
 
-function renderChannels(){
-  const query=search.value.toLocaleLowerCase("az");
+let hls = null;
+let playId = 0;
+
+function stopPlayer(){
+  playId++;
+  if(hls){
+    hls.destroy();
+    hls = null;
+  }
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+}
+
+function playChannel(channel, card){
+  stopPlayer();
+  const currentId = playId;
+
+  now.textContent = "📺 " + channel.name;
+  statusText.textContent = "Yayım yüklənir...";
+
+  document.querySelectorAll(".card").forEach(el =>
+    el.classList.remove("active")
+  );
+  card.classList.add("active");
+
+  document.getElementById("player").scrollIntoView({
+    behavior:"smooth", block:"start"
+  });
+
+  function error(message){
+    if(currentId === playId) statusText.textContent = message;
+  }
+
+  if(window.Hls && Hls.isSupported()){
+    const player = new Hls();
+    hls = player;
+
+    player.on(Hls.Events.ERROR, (event, data) => {
+      if(data.fatal && currentId === playId){
+        error("Yayım açılmadı. Link, CORS və ya region məhdudiyyətini yoxla.");
+        player.destroy();
+        if(hls === player) hls = null;
+      }
+    });
+
+    player.on(Hls.Events.MANIFEST_PARSED, () => {
+      if(currentId !== playId) return;
+      video.play().catch(() =>
+        error("Yayımı başlatmaq üçün Play düyməsinə bas.")
+      );
+    });
+
+    player.loadSource(channel.url);
+    player.attachMedia(video);
+
+  }else if(video.canPlayType("application/vnd.apple.mpegurl")){
+    video.src = channel.url;
+    video.play().catch(() =>
+      error("Yayımı başlatmaq üçün Play düyməsinə bas.")
+    );
+  }else{
+    error("Brauzer HLS formatını dəstəkləmir.");
+  }
+}
+
+function render(){
+  const q = document.getElementById("search")
+    .value.toLocaleLowerCase("az");
+
   grid.replaceChildren();
 
-  const filtered=channels.filter(channel=>
-    channel.name.toLocaleLowerCase("az").includes(query)
+  const found = channels.filter(c =>
+    c.name.toLocaleLowerCase("az").includes(q)
   );
 
-  if(!filtered.length){
-    const empty=document.createElement("p");
-    empty.className="empty";
-    empty.textContent="Kanal tapılmadı.";
+  if(!found.length){
+    const empty = document.createElement("p");
+    empty.className = "empty";
+    empty.textContent = "Kanal tapılmadı.";
     grid.append(empty);
     return;
   }
 
-  filtered.forEach(channel=>{
-    const card=document.createElement("article");
-    card.className="card";
+  found.forEach(channel => {
+    const card = document.createElement("article");
+    card.className = "card";
 
-    const logo=document.createElement("div");
-    logo.className="logo";
-    logo.textContent=channel.logo;
+    const logo = document.createElement("div");
+    logo.className = "logo";
+    logo.textContent = channel.logo;
 
-    const title=document.createElement("h3");
-    title.textContent=channel.name;
+    const title = document.createElement("h3");
+    title.textContent = channel.name;
 
-    const link=document.createElement("a");
-    link.className="watch";
-    link.href=channel.url;
-    link.target="_blank";
-    link.rel="noopener noreferrer";
-    link.textContent="▶ İzlə";
-    link.addEventListener("click",()=>{
-      document.getElementById("now").textContent="📺 "+channel.name;
-      document.getElementById("status").textContent=
-        "Kanal yeni pəncərədə açılır. Yayım həmin saytın əlçatanlığından asılıdır.";
-    });
+    const button = document.createElement("button");
+    button.textContent = "▶ İzlə";
+    button.addEventListener("click", () =>
+      playChannel(channel, card)
+    );
 
-    card.append(logo,title,link);
+    card.append(logo, title, button);
     grid.append(card);
   });
 }
 
-search.addEventListener("input",renderChannels);
-renderChannels();
+document.getElementById("search").addEventListener("input", render);
+
+video.addEventListener("playing", () => {
+  statusText.textContent = "Canlı yayım oynadılır.";
+});
+
+video.addEventListener("error", () => {
+  if(video.currentSrc){
+    statusText.textContent =
+      "Video açıla bilmədi. Başqa kanal seç və ya axını yoxla.";
+  }
+});
+
+render();
 </script>
 </body>
 </html>
