@@ -1,0 +1,25 @@
+
+{
+  "id": "/tv-online/",
+  "name": "ANVAR IPTV",
+  "short_name": "ANVAR IPTV",
+  "description": "Canlı TV - Azərbaycan",
+  "start_url": "/tv-online/",
+  "scope": "/tv-online/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0A0F1C",
+  "theme_color": "#0A0F1C",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
