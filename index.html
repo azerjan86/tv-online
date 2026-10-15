@@ -5,34 +5,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101010">
+<meta name="description" content="TV ONLINE AZ — Azərbaycan televiziya kanallarını canlı izləyin.">
 <title>TV ONLINE AZ</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#101010;color:#fff;font-family:Arial,sans-serif}
-header{padding:20px 5%;background:#181818;display:flex;justify-content:space-between;align-items:center}
+header{padding:20px 5%;background:#181818;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .logo{font-size:25px;font-weight:bold;color:#e50914}
 main{padding:25px 5%;max-width:1200px;margin:auto}
 .hero{padding:40px 5%;background:linear-gradient(110deg,#401015,#171717);border-radius:12px}
 h1{font-size:clamp(32px,6vw,55px);margin:10px 0}
 p{color:#bbb;line-height:1.6}
-input,button{padding:12px;border-radius:6px;border:0;font-size:15px}
-input{background:#252525;color:white;border:1px solid #444;width:100%}
-button{background:#e50914;color:white;cursor:pointer;font-weight:bold}
+button{padding:12px;border-radius:6px;border:0;font-size:15px;background:#e50914;color:white;cursor:pointer;font-weight:bold}
 button:hover{opacity:.85}
 .search{margin:22px 0}
+input{padding:12px;border-radius:6px;border:1px solid #444;background:#252525;color:white;width:100%;font-size:15px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px}
 .card{background:#202020;border-radius:9px;padding:16px;border:1px solid #333}
-.logo-box{height:75px;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:bold;color:#ff535b}
+.logo-box{min-height:75px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:22px;font-weight:bold;color:#ff535b;overflow-wrap:anywhere}
 .card h3{font-size:16px;overflow-wrap:anywhere}
 .card button{width:100%;font-size:13px}
 .player{margin-top:30px;background:#1d1d1d;padding:18px;border-radius:10px}
-video{width:100%;aspect-ratio:16/9;background:#000}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.actions input{flex:1;min-width:180px}
+video{display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:6px}
 #status{font-size:13px;color:#bbb}
 footer{text-align:center;padding:25px;color:#999}
+@media(max-width:480px){
+  header{padding:16px 4%;flex-wrap:wrap}
+  .logo{font-size:21px}
+  main{padding:20px 4%}
+  .hero{padding:28px 5%}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .card{padding:12px}
+  .player{padding:12px}
+}
 </style>
 </head>
+
 <body>
 <header>
   <div class="logo">▶ TV ONLINE AZ</div>
@@ -43,23 +52,23 @@ footer{text-align:center;padding:25px;color:#999}
   <section class="hero">
     <p>AZƏRBAYCAN IPTV PLATFORMASI</p>
     <h1>Televiziya bir yerdə.</h1>
-    <p>M3U pleylistini yüklə, kanal seç və izlə.</p>
-    <button onclick="document.getElementById('file').click()">＋ Pleylist əlavə et</button>
-    <input id="file" type="file" accept=".m3u,.m3u8,.txt" hidden>
+    <p>Sevdiyin kanalı seç və canlı izlə.</p>
   </section>
 
   <section class="player" id="player">
     <h2 id="now">Canlı TV pleyeri</h2>
     <video id="video" controls playsinline></video>
-    <p id="status">Kanal seç və izləməyə başla.</p>
-    <div class="actions">
-      <input id="url" placeholder="M3U pleylistinin URL-si">
-      <button id="load">Yüklə</button>
-    </div>
+    <p id="status" role="status" aria-live="polite">Kanal seç və izləməyə başla.</p>
   </section>
 
   <h2>📺 Kanallar</h2>
-  <input class="search" id="search" placeholder="Kanal axtar...">
+  <input
+    class="search"
+    id="search"
+    type="search"
+    placeholder="Kanal axtar..."
+    aria-label="Kanal axtar"
+  >
   <div class="grid" id="channels"></div>
 </main>
 
@@ -68,152 +77,121 @@ footer{text-align:center;padding:25px;color:#999}
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 <script>
 const channels = [
-  {name:"AzTV", url:"https://str.yodacdn.net/azertv/index.m3u8"},
-  {name:"İctimai TV", url:"https://live.itv.az/itv.m3u8"},
-  {name:"CBC Sport", url:"https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8"},
-  {name:"Mədəniyyət TV", url:"https://str.yodacdn.net/medeniyyettele/index.m3u8"},
-  {name:"Baku TV", url:"https://rtmp.baku.tv/hls/bakutv.m3u8"},
-  {name:"Kanal 35", url:"https://str2.yodacdn.net/kanal35/index.m3u8"},
-  {name:"Naxçıvan TV", url:"https://str2.yodacdn.net/ntv/video.m3u8"},
-  {name:"Kanal S", url:"https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8"}
+  {name:"AzTV",url:"https://str.yodacdn.net/azertv/index.m3u8"},
+  {name:"İctimai TV",url:"https://live.itv.az/itv.m3u8"},
+  {name:"CBC Sport",url:"https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8"},
+  {name:"Mədəniyyət TV",url:"https://str.yodacdn.net/medeniyyettele/index.m3u8"},
+  {name:"Baku TV",url:"https://rtmp.baku.tv/hls/bakutv.m3u8"},
+  {name:"Kanal 35",url:"https://str2.yodacdn.net/kanal35/index.m3u8"},
+  {name:"Naxçıvan TV",url:"https://str2.yodacdn.net/ntv/video.m3u8"},
+  {name:"Kanal S",url:"https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8"}
 ];
 
-const grid=document.getElementById('channels');
-const video=document.getElementById('video');
-const statusText=document.getElementById('status');
-let hls=null;
+const grid = document.getElementById("channels");
+const video = document.getElementById("video");
+const statusText = document.getElementById("status");
+const nowPlaying = document.getElementById("now");
+
+let hls = null;
 
 function render(){
-  const q=document.getElementById('search').value.toLocaleLowerCase('az');
+  const q = document.getElementById("search").value.toLocaleLowerCase("az");
   grid.replaceChildren();
 
-  channels.filter(c=>c.name.toLocaleLowerCase('az').includes(q))
-  .forEach(c=>{
-    const card=document.createElement('div');
-    card.className='card';
+  channels
+    .filter(c => c.name.toLocaleLowerCase("az").includes(q))
+    .forEach(c => {
+      const card = document.createElement("div");
+      card.className = "card";
 
-    const logo=document.createElement('div');
-    logo.className='logo-box';
-    logo.textContent=c.name;
+      const logo = document.createElement("div");
+      logo.className = "logo-box";
+      logo.textContent = c.name;
 
-    const title=document.createElement('h3');
-    title.textContent=c.name;
+      const title = document.createElement("h3");
+      title.textContent = c.name;
 
-    const btn=document.createElement('button');
-    btn.textContent='▶ İzlə';
-    btn.onclick=()=>playChannel(c);
+      const btn = document.createElement("button");
+      btn.textContent = "▶ İzlə";
+      btn.setAttribute("aria-label", c.name + " kanalını izlə");
+      btn.onclick = () => playChannel(c);
 
-    card.append(logo,title,btn);
-    grid.append(card);
-  });
+      card.append(logo, title, btn);
+      grid.append(card);
+    });
 }
 
 function stop(){
-  if(hls){hls.destroy();hls=null;}
+  if(hls){
+    hls.destroy();
+    hls = null;
+  }
+
   video.pause();
-  video.removeAttribute('src');
+  video.removeAttribute("src");
   video.load();
 }
 
 function playChannel(c){
   stop();
-  document.getElementById('now').textContent=c.name;
-  statusText.textContent='Yayım yüklənir...';
 
-  if(/\.m3u8($|[?#])/i.test(c.url)&&window.Hls&&Hls.isSupported()){
-    hls=new Hls();
+  nowPlaying.textContent = c.name;
+  statusText.textContent = "Yayım yüklənir...";
+
+  document.getElementById("player").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+
+  if(window.Hls && Hls.isSupported()){
+    hls = new Hls();
+
     hls.loadSource(c.url);
     hls.attachMedia(video);
 
-    hls.on(Hls.Events.MANIFEST_PARSED,()=>{
-      video.play().then(()=>{
-        statusText.textContent='Canlı yayım oynadılır.';
-      }).catch(()=>{
-        statusText.textContent='Play düyməsinə bas.';
-      });
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      video.play()
+        .then(() => {
+          statusText.textContent = "Canlı yayım oynadılır.";
+        })
+        .catch(() => {
+          statusText.textContent = "Yayımı başlatmaq üçün Play düyməsinə bas.";
+        });
     });
 
-    hls.on(Hls.Events.ERROR,(event,data)=>{
+    hls.on(Hls.Events.ERROR, (event, data) => {
       if(data.fatal){
-        statusText.textContent='Yayım açıla bilmədi. Link və ya CORS məhdudiyyətini yoxla.';
+        statusText.textContent =
+          "Yayım açıla bilmədi. Kanalın linki və ya yayım məhdudiyyətlərini yoxlamaq lazımdır.";
+
+        hls.destroy();
+        hls = null;
       }
     });
-  }else{
-    video.src=c.url;
-    video.play().catch(()=>{
-      statusText.textContent='Yayım başlamadı. Link və formatı yoxla.';
+  }else if(video.canPlayType("application/vnd.apple.mpegurl")){
+    video.src = c.url;
+
+    video.play().catch(() => {
+      statusText.textContent =
+        "Yayımı başlatmaq üçün Play düyməsinə bas.";
     });
+  }else{
+    statusText.textContent =
+      "Bu brauzer HLS yayımını dəstəkləmir.";
   }
-
-  document.getElementById('player').scrollIntoView({behavior:'smooth'});
 }
 
-function parseM3U(text){
-  const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/);
-  const result=[];
-  let name='TV kanalı';
+document.getElementById("search").addEventListener("input", render);
 
-  for(const raw of lines){
-    const line=raw.trim();
-
-    if(line.startsWith('#EXTINF:')){
-      name=line.slice(line.lastIndexOf(',')+1).trim()||'TV kanalı';
-    }else if(line&&!line.startsWith('#')){
-      try{
-        const u=new URL(line);
-        if(u.protocol==='https:'||u.protocol==='http:'){
-          result.push({name,url:u.href});
-        }
-      }catch{}
-    }
-  }
-  return result;
-}
-
-function addPlaylist(text){
-  if(!text.trim().startsWith('#EXTM3U')){
-    statusText.textContent='Düzgün M3U pleylisti seç.';
-    return;
-  }
-
-  const result=parseM3U(text);
-  if(!result.length){
-    statusText.textContent='Pleylistdə kanal tapılmadı.';
-    return;
-  }
-
-  stop();
-  channels.splice(0,channels.length,...result);
-  render();
-  statusText.textContent=result.length+' kanal yükləndi.';
-}
-
-document.getElementById('file').addEventListener('change',async e=>{
-  const file=e.target.files[0];
-  if(!file)return;
-  try{
-    addPlaylist(await file.text());
-  }catch{
-    statusText.textContent='Faylı oxumaq mümkün olmadı.';
-  }
+video.addEventListener("playing", () => {
+  statusText.textContent = "Canlı yayım oynadılır.";
 });
 
-document.getElementById('load').onclick=async()=>{
-  const url=document.getElementById('url').value.trim();
-  try{
-    const parsed=new URL(url);
-    if(!['https:','http:'].includes(parsed.protocol))throw Error();
-    const response=await fetch(parsed.href);
-    if(!response.ok)throw Error();
-    addPlaylist(await response.text());
-  }catch{
-    statusText.textContent='Yükləmə alınmadı. URL-ni yoxla və ya M3U faylını birbaşa seç.';
+video.addEventListener("error", () => {
+  if(video.currentSrc){
+    statusText.textContent =
+      "Video açıla bilmədi. Yayım müvəqqəti əlçatmaz ola bilər.";
   }
-};
-
-document.getElementById('search').addEventListener('input',render);
-video.addEventListener('error',()=>{
-  statusText.textContent='Video açıla bilmədi. Bu yayım işləməyə və ya brauzerdə dəstəklənməyə bilər.';
 });
 
 render();
