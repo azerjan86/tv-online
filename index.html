@@ -1,702 +1,557 @@
 
 <!DOCTYPE html>
-<html lang="az">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b12">
-  <meta name="description" content="ANVAR IPTV — Azərbaycan televiziya kanallarını onlayn izləyin.">
-  <link rel="manifest" href="./manifest.json">
-  <title>ANVAR IPTV — Canlı TV</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
-
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #090b12;
-      --panel: #141824;
-      --panel2: #1c2231;
-      --line: #2a3040;
-      --red: #f04452;
-      --text: #f5f7fb;
-      --muted: #9ba3b5;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background:
-        radial-gradient(ellipse at 50% -20%, #29203a 0, transparent 55%),
-        var(--bg);
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, Arial, sans-serif;
-      min-height: 100vh;
-    }
-
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px max(16px, calc((100% - 1180px) / 2));
-      background: #0b0e17ed;
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(16px);
-    }
-
-    .brand-icon {
-      display: grid;
-      place-items: center;
-      width: 44px;
-      height: 44px;
-      flex-shrink: 0;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #ff6570, #d91f3d);
-      box-shadow: 0 5px 24px #f0445233;
-      font-size: 22px;
-    }
-
-    .brand { font-size: 19px; font-weight: 900; letter-spacing: .3px; }
-    .subtitle { margin-top: 3px; color: var(--muted); font-size: 10px; letter-spacing: 1.5px; }
-    .header-live { margin-left: auto; color: #ff727d; font-size: 12px; font-weight: 800; white-space: nowrap; }
-
-    main { max-width: 1180px; margin: auto; padding: 30px 18px 48px; }
-    .hero { margin-bottom: 22px; }
-    .eyebrow { color: #ff7883; font-size: 11px; font-weight: 800; letter-spacing: 2px; }
-    h1 { font-size: clamp(27px, 5vw, 42px); line-height: 1.12; margin: 10px 0; letter-spacing: -1px; }
-    .description { color: var(--muted); line-height: 1.6; font-size: 14px; }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(270px, 1fr);
-      gap: 18px;
-      align-items: start;
-    }
-
-    .panel {
-      background: linear-gradient(145deg, #171b28, #11141e);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      min-width: 0;
-    }
-
-    .video-wrap {
-      position: relative;
-      overflow: hidden;
-      border-radius: 12px;
-      background: #030408;
-      isolation: isolate;
-    }
-
-    video {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: contain;
-      background: #030408;
-    }
-
-    .empty-player {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      text-align: center;
-      pointer-events: none;
-      background: radial-gradient(ellipse, #21152255, transparent 70%);
-    }
-
-    .empty-player.hidden { display: none; }
-
-    .big-play {
-      display: grid;
-      place-items: center;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: var(--red);
-      box-shadow: 0 0 40px #f0445244;
-      font-size: 25px;
-    }
-
-    .empty-title { font-weight: 800; }
-    .empty-sub { color: var(--muted); font-size: 12px; padding: 0 12px; }
-
-    .now-playing { margin-top: 16px; font-size: 20px; font-weight: 850; }
-    .status { margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.6; min-height: 20px; overflow-wrap: anywhere; }
-
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
-
-    .btn {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 13px;
-      color: var(--text);
-      background: var(--panel2);
-      transition: .2s;
-    }
-
-    .btn:hover { border-color: var(--red); }
-    .btn.primary { background: var(--red); border-color: var(--red); font-weight: 750; }
-    .btn.active { border-color: var(--red); background: #39202b; color: #ff8992; }
-    .btn:disabled { opacity: .5; cursor: not-allowed; }
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    h2 { font-size: 18px; margin: 0; }
-    .count { color: var(--muted); font-size: 12px; }
-
-    .search-wrap { position: relative; margin-top: 14px; }
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-
-    input[type="search"] {
-      width: 100%;
-      min-width: 0;
-      padding: 12px 12px 12px 36px;
-      border: 1px solid var(--line);
-      border-radius: 11px;
-      outline: none;
-      background: #0c1019;
-      color: var(--text);
-    }
-
-    input[type="search"]:focus { border-color: var(--red); }
-
-    .filters { display: flex; gap: 8px; margin-top: 12px; }
-    .filters .btn { flex: 1; font-size: 12px; padding: 10px 7px; }
-
-    .channel-list {
-      display: grid;
-      gap: 8px;
-      margin-top: 14px;
-      max-height: 465px;
-      overflow-y: auto;
-      scrollbar-color: #383e50 transparent;
-    }
-
-    .channel {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      padding: 9px;
-      text-align: left;
-      border: 1px solid transparent;
-      border-radius: 12px;
-      color: var(--text);
-      background: #1b2030;
-    }
-
-    .channel:hover { background: #252b3d; }
-    .channel.active { border-color: #f0445277; background: #30202b; }
-
-    .channel-logo {
-      display: grid;
-      place-items: center;
-      flex: 0 0 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: linear-gradient(145deg, #343b50, #222838);
-      font-size: 10px;
-      font-weight: 900;
-      overflow: hidden;
-      text-align: center;
-    }
-
-    .channel-info { flex: 1; min-width: 0; }
-    .channel-name { font-size: 13px; font-weight: 750; }
-    .channel-category { margin-top: 4px; color: var(--muted); font-size: 10px; }
-    .star-btn { padding: 6px; border: 0; background: transparent; color: #6e7689; font-size: 20px; }
-    .star-btn.fav { color: #ffd166; }
-    .empty-list { padding: 20px 8px; color: var(--muted); text-align: center; font-size: 13px; }
-
-    .note {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #101521;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.6;
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 24px 16px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    button:focus-visible, input:focus-visible {
-      outline: 2px solid var(--red);
-      outline-offset: 3px;
-    }
-
-    @media (max-width: 780px) {
-      header { padding: 12px 14px; }
-      main { padding: 24px 12px 34px; }
-      .layout { grid-template-columns: 1fr; }
-      .panel { padding: 12px; }
-      .channel-list { max-height: 390px; }
-      .hero { margin-bottom: 18px; }
-    }
-
-    @media (max-width: 380px) {
-      .header-live { font-size: 10px; }
-      .brand { font-size: 17px; }
-      .actions .btn { flex: 1; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08080d">
+<meta name="description" content="ANVAR IPTV — онлайн телевидение Азербайджана">
+<title>ANVAR IPTV — Онлайн ТВ</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+<style>
+:root {
+  --bg:#08080d;
+  --panel:#11111b;
+  --panel2:#191927;
+  --line:#29283a;
+  --text:#f8f7ff;
+  --muted:#9897ad;
+  --purple:#8b5cf6;
+  --purple2:#6d28d9;
+  --green:#4ade80;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.topbar{
+  height:76px;display:flex;align-items:center;gap:16px;
+  padding:0 max(20px,calc((100% - 1240px)/2));
+  border-bottom:1px solid var(--line);
+  background:#0c0b13;
+  position:sticky;top:0;z-index:10;
+}
+.brand{display:flex;align-items:center;gap:11px;font-size:21px;font-weight:850;letter-spacing:-.6px}
+.brand-icon{
+  width:42px;height:42px;display:grid;place-items:center;
+  border-radius:13px;background:linear-gradient(135deg,#a78bfa,#6d28d9);
+  box-shadow:0 5px 25px #7c3aed35;font-size:17px
+}
+.brand small{display:block;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.status{font-size:11px;color:var(--green);background:#163021;padding:8px 11px;border-radius:30px}
+.status i{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:6px}
+.icon-btn{
+  border:1px solid var(--line);background:var(--panel);color:white;
+  width:40px;height:40px;border-radius:12px
+}
+.container{width:min(1240px,calc(100% - 36px));margin:auto}
+.hero{
+  padding:40px 0 24px;display:flex;align-items:center;justify-content:space-between;gap:20px
+}
+.eyebrow{color:#b49aff;font-size:10px;font-weight:800;letter-spacing:2.3px;margin:0 0 11px}
+h1{font-size:clamp(27px,4vw,43px);letter-spacing:-1.6px;line-height:1.12;margin:0 0 12px}
+.hero p:last-child{margin:0;color:var(--muted);font-size:14px}
+.hero-tag{
+  padding:12px 15px;border:1px solid #44336d;border-radius:14px;
+  background:#201438;color:#d8c8ff;font-size:12px;white-space:nowrap
+}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:20px;align-items:start}
+.player-card,.sidebar,.catalog{
+  border:1px solid var(--line);background:var(--panel);border-radius:19px;overflow:hidden
+}
+.player-head{
+  display:flex;align-items:center;gap:12px;padding:15px 18px;min-height:76px
+}
+.current-logo{
+  width:45px;height:45px;flex-shrink:0;display:grid;place-items:center;
+  background:linear-gradient(135deg,#6d28d9,#a78bfa);border-radius:13px;
+  font-weight:850;font-size:12px
+}
+.current-info{min-width:0}
+.current-info strong{display:block;font-size:15px;overflow-wrap:anywhere}
+.current-info span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.live{margin-left:auto;font-size:10px;letter-spacing:1px;color:#f87171;white-space:nowrap}
+.video-box{
+  position:relative;aspect-ratio:16/9;background:#030307;
+  display:grid;place-items:center;overflow:hidden
+}
+video{width:100%;height:100%;object-fit:contain;background:#030307}
+.video-empty{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;padding:20px;
+  background:radial-gradient(ellipse at center,#21143b 0%,#0b0912 65%,#030307 100%)
+}
+.video-empty.hidden{display:none}
+.big-play{
+  width:66px;height:66px;border-radius:22px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#a78bfa,#6d28d9);font-size:24px;
+  box-shadow:0 0 45px #8b5cf644;margin-bottom:18px
+}
+.video-empty h2{font-size:19px;margin:0 0 8px}
+.video-empty p{color:var(--muted);font-size:12px;margin:0}
+.player-bottom{
+  padding:13px 18px;display:flex;align-items:center;gap:10px;
+  color:var(--muted);font-size:12px;min-height:48px
+}
+.player-bottom .dot{width:7px;height:7px;background:var(--purple);border-radius:50%;flex-shrink:0}
+.player-bottom span:last-child{margin-left:auto;text-align:right}
+.sidebar{padding:18px}
+.side-title{font-size:14px;font-weight:750;margin:0 0 16px}
+.side-empty{font-size:12px;color:var(--muted);line-height:1.8}
+.side-item{
+  display:flex;align-items:center;gap:11px;padding:10px 8px;
+  border-radius:12px;border:1px solid transparent;cursor:pointer
+}
+.side-item:hover,.side-item.selected{background:#251a3a;border-color:#49316f}
+.mini-logo{
+  width:39px;height:39px;flex-shrink:0;border-radius:11px;
+  display:grid;place-items:center;font-size:10px;font-weight:850;
+  background:linear-gradient(135deg,#7041c6,#342054)
+}
+.side-name{font-size:12px;font-weight:700}
+.side-category{font-size:10px;color:var(--muted);margin-top:4px}
+.section{padding:34px 0 24px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:14px;margin-bottom:18px}
+.section-head h2{font-size:23px;letter-spacing:-.5px;margin:0}
+.section-head p{color:var(--muted);font-size:12px;margin:7px 0 0}
+.counter{font-size:11px;color:var(--muted)}
+.search-row{display:flex;gap:12px;margin-bottom:16px}
+.search{
+  display:flex;align-items:center;gap:10px;flex:1;min-width:0;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:0 14px;height:48px
+}
+.search:focus-within{border-color:var(--purple)}
+.search span{font-size:20px;color:#b49aff}
+.search input{width:100%;min-width:0;background:transparent;border:0;outline:0;color:white;font-size:13px}
+.search input::placeholder{color:#77758c}
+.reload{
+  border:1px solid var(--line);background:var(--panel);color:#ddd3ff;
+  border-radius:12px;padding:0 14px;font-size:12px
+}
+.categories{display:flex;gap:8px;overflow:auto;padding-bottom:5px;margin-bottom:18px}
+.cat{
+  border:1px solid var(--line);border-radius:9px;background:#11111b;color:var(--muted);
+  padding:9px 14px;white-space:nowrap;font-size:11px
+}
+.cat.active,.cat:hover{background:#38215c;border-color:#7545bb;color:white}
+.channels-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.channel{
+  min-width:0;display:flex;align-items:center;gap:11px;text-align:left;
+  padding:13px 11px;border:1px solid var(--line);border-radius:14px;
+  background:var(--panel);color:white;transition:.18s
+}
+.channel:hover{border-color:#6745a2;transform:translateY(-2px)}
+.channel.selected{background:#211732;border-color:var(--purple);box-shadow:0 0 0 1px #8b5cf622}
+.channel .mini-logo{width:43px;height:43px}
+.channel-copy{min-width:0}
+.channel-copy strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.channel-copy span{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.empty{padding:36px 10px;text-align:center;color:var(--muted);font-size:13px}
+.hidden{display:none!important}
+.notice{
+  border:1px solid var(--line);border-radius:13px;background:#101019;
+  padding:16px 18px;margin:12px 0 30px
+}
+.notice strong{font-size:12px}
+.notice p{font-size:11px;line-height:1.7;color:var(--muted);margin:7px 0 0}
+footer{
+  border-top:1px solid var(--line);padding:23px 18px;
+  color:var(--muted);font-size:11px
+}
+.footer-inner{width:min(1240px,100%);margin:auto;display:flex;justify-content:space-between;gap:15px}
+@media(max-width:950px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{order:2}
+  .sidebar-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .channels-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:600px){
+  .topbar{height:66px;padding:0 15px}
+  .brand{font-size:18px}
+  .brand-icon{width:38px;height:38px}
+  .container{width:calc(100% - 24px)}
+  .hero{padding:29px 0 22px}
+  .hero-tag{display:none}
+  .hero p:last-child{font-size:12px}
+  h1{font-size:30px}
+  .channels-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .channel{padding:10px 8px;gap:8px}
+  .channel .mini-logo{width:36px;height:36px}
+  .channel-copy strong{font-size:11px}
+  .player-head{padding:12px}
+  .player-bottom{padding:12px;font-size:10px}
+  .sidebar{padding:13px}
+  .side-item{padding:8px 5px}
+  .side-name{font-size:11px}
+  .search-row{gap:7px}
+  .reload{padding:0 10px}
+  .section-head h2{font-size:21px}
+  .footer-inner{flex-direction:column}
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand-icon" aria-hidden="true">▶</div>
+<header class="topbar">
+  <a href="./" class="brand">
+    <span class="brand-icon">▶</span>
+    <span>ANVAR IPTV<small>TELEVISION ONLINE</small></span>
+  </a>
+  <div class="top-right">
+    <span class="status"><i></i> ONLINE TV</span>
+    <button class="icon-btn" id="topSearch" aria-label="Поиск">⌕</button>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
     <div>
-      <div class="brand">ANVAR IPTV</div>
-      <div class="subtitle">AZƏRBAYCAN · CANLI TV</div>
+      <p class="eyebrow">ТВОЁ ТЕЛЕВИДЕНИЕ</p>
+      <h1>Мир телевидения<br>в одном месте.</h1>
+      <p>Выбирай канал. Устраивайся поудобнее. Смотри онлайн.</p>
     </div>
-    <div class="header-live">● LIVE TV</div>
-  </header>
+    <div class="hero-tag">✦ Премиум-интерфейс</div>
+  </section>
 
-  <main>
-    <section class="hero">
-      <div class="eyebrow">SƏNİN TELEVİZİYAN</div>
-      <h1>Canlı TV izləməyə başla</h1>
-      <div class="description">Sevdiyin kanalı seç və canlı yayıma qoşul.</div>
-    </section>
-
-    <div class="layout">
-      <section class="panel">
-        <div class="video-wrap">
-          <video id="video" controls playsinline webkit-playsinline preload="none"></video>
-          <div class="empty-player" id="emptyPlayer">
-            <div class="big-play">▶</div>
-            <div class="empty-title">ANVAR IPTV</div>
-            <div class="empty-sub">İzləməyə başlamaq üçün kanal seç</div>
-          </div>
+  <section class="layout">
+    <div class="player-card">
+      <div class="player-head">
+        <div class="current-logo" id="currentLogo">TV</div>
+        <div class="current-info">
+          <strong id="currentName">ANVAR IPTV</strong>
+          <span id="currentCategory">Выбери канал ниже</span>
         </div>
-
-        <div class="now-playing" id="nowPlaying">Kanal seçilməyib</div>
-        <div class="status" id="status" role="status" aria-live="polite">
-          Kanallar siyahısından bir kanal seç.
+        <span class="live">● LIVE</span>
+      </div>
+      <div class="video-box">
+        <video id="video" controls playsinline></video>
+        <div class="video-empty" id="placeholder">
+          <div class="big-play">▶</div>
+          <h2>Твоё ТВ начинается здесь</h2>
+          <p>Выбери телеканал, чтобы начать просмотр</p>
         </div>
-
-        <div class="actions">
-          <button class="btn primary" id="playBtn">▶ İzlə</button>
-          <button class="btn" id="stopBtn">■ Dayandır</button>
-          <button class="btn" id="favoriteCurrent">☆ Seçilmişlərə əlavə et</button>
-          <button class="btn" id="fullscreenBtn">⛶ Tam ekran</button>
-        </div>
-
-        <div class="note">
-          Qeyd: Canlı yayımlar üçüncü tərəflərin serverlərindən gəlir.
-          Kanal açılmırsa, yayım ünvanı dəyişmiş, server tərəfindən bloklanmış
-          və ya müvəqqəti əlçatmaz ola bilər.
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-title">
-          <h2>📺 Kanallar</h2>
-          <span class="count" id="count">0 kanal</span>
-        </div>
-
-        <div class="search-wrap">
-          <span class="search-icon">⌕</span>
-          <input id="search" type="search" placeholder="Kanal axtar..." aria-label="Kanal axtar">
-        </div>
-
-        <div class="filters">
-          <button class="btn active" id="allBtn">Hamısı</button>
-          <button class="btn" id="favoritesBtn">★ Seçilmişlər</button>
-        </div>
-
-        <div class="channel-list" id="channelList"></div>
-      </section>
+      </div>
+      <div class="player-bottom">
+        <i class="dot"></i>
+        <span id="message">Загружаем список телеканалов…</span>
+        <span id="playerCount">ANVAR IPTV</span>
+      </div>
     </div>
-  </main>
 
-  <footer>ANVAR IPTV © <span id="year"></span> · Azərbaycan televiziya kanalları</footer>
+    <aside class="sidebar">
+      <h2 class="side-title">✦ Популярные каналы</h2>
+      <div id="popular" class="sidebar-list">
+        <p class="side-empty">Загружаем каналы…</p>
+      </div>
+    </aside>
+  </section>
 
-  <script>
-    "use strict";
+  <section class="section" id="catalog">
+    <div class="section-head">
+      <div>
+        <h2>Все телеканалы</h2>
+        <p>Найди любимый канал за секунду</p>
+      </div>
+      <span class="counter" id="counter">Загрузка…</span>
+    </div>
+    <div class="search-row">
+      <label class="search">
+        <span>⌕</span>
+        <input id="search" type="search" placeholder="Поиск канала..." autocomplete="off">
+      </label>
+      <button class="reload" id="reload">↻ Обновить</button>
+    </div>
+    <div class="categories" id="categories">
+      <button class="cat active" data-cat="Все">Все каналы</button>
+    </div>
+    <div class="channels-grid" id="channels"></div>
+    <div class="empty hidden" id="empty">Каналы не найдены. Попробуй другой запрос.</div>
+  </section>
 
-   
-const channels = [
-  {
-    name: "AzTV",
-    logo: "AzTV",
-    category: "Milli kanal",
-    url: "https://str.yodacdn.net/azertv/index.m3u8"
-  },
-  {
-    name: "Xəzər TV",
-    logo: "XƏZƏR",
-    category: "Milli kanal",
-    url: "https://www.xezerxeber.az/stream/index.m3u8"
-  },
-  {
-    name: "ATV",
-    logo: "ATV",
-    category: "Milli kanal",
-    url: "https://lives.atv.az:5443/ATV_TV_STREAM/streams/atvcanli.m3u8"
-  },
-  {
-    name: "Mədəniyyət TV",
-    logo: "MƏD",
-    category: "Mədəniyyət",
-    url: "https://str.yodacdn.net/medeniyyettele/index.m3u8"
-  },
-  {
-    name: "Kanal S",
-    logo: "KANAL S",
-    category: "Milli kanal",
-    url: "https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8"
-  },
-  {
-    name: "Baku TV",
-    logo: "BAKU",
-    category: "Xəbərlər",
-    url: "https://rtmp.baku.tv/hls/bakutv.m3u8"
-  },
-  {
-    name: "APA TV",
-    logo: "APA",
-    category: "Xəbərlər",
-    url: "https://stream.apa.tv/apastream/index.m3u8"
-  },
-  {
-    name: "Naxçıvan TV",
-    logo: "NTV",
-    category: "Regional kanal",
-    url: "https://str2.yodacdn.net/ntv/video.m3u8"
-  },
-  {
-    name: "İctimai TV",
-    logo: "İTV",
-    category: "İctimai kanal",
-    url: "https://live.itv.az/itv.m3u8"
-  },
-  {
-    name: "Ayaz TV",
-    logo: "AYAZ",
-    category: "Milli kanal",
-    url: "https://janya-ayaztv.vgcdn.net/ptnr-WebApp/title-Ayaz_TV/v1/vglive-sk-934820/main.m3u8"
-  },
-  {
-    name: "Kanal 35",
-    logo: "K35",
-    category: "Regional kanal",
-    url: "https://str2.yodacdn.net/kanal35/index.m3u8"
-  },
-  {
-    name: "EL TV",
-    logo: "EL TV",
-    category: "Regional kanal",
-    url: "https://live.eltv.az/live/eltv/playlist.m3u8"
+  <div class="notice">
+    <strong>ⓘ Информация о трансляциях</strong>
+    <p>Список загружается из файла playlist.m3u. Работа каналов зависит от доступности источника, поддержки браузером и разрешений правообладателей. Некоторые потоки могут быть недоступны.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>© <span id="year"></span> ANVAR IPTV</span>
+    <span>Онлайн телевидение · Сделано с ♥</span>
+  </div>
+</footer>
+
+<script>
+const video = document.getElementById("video");
+const placeholder = document.getElementById("placeholder");
+const message = document.getElementById("message");
+const channelsBox = document.getElementById("channels");
+const popularBox = document.getElementById("popular");
+const searchBox = document.getElementById("search");
+const counter = document.getElementById("counter");
+
+let channels = [];
+let activeId = null;
+let activeCategory = "Все";
+let hls = null;
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+function parsePlaylist(text) {
+  const lines = text.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  const result = [];
+  let info = "";
+
+  for (const line of lines) {
+    if (line.startsWith("#EXTINF")) {
+      info = line;
+      continue;
+    }
+
+    if (line.startsWith("#") || !/^https?:\/\//i.test(line)) continue;
+
+    const nameMatch = info.match(/,(.*)$/);
+    const groupMatch = info.match(/group-title="([^"]*)"/i);
+    const logoMatch = info.match(/tvg-logo="([^"]*)"/i);
+    const name = nameMatch ? nameMatch[1].trim() : "Телеканал";
+
+    result.push({
+      id: "ch-" + result.length,
+      name,
+      category: groupMatch && groupMatch[1] ? groupMatch[1] : "Другие",
+      logoUrl: logoMatch ? logoMatch[1] : "",
+      url: line
+    });
+    info = "";
   }
-];
+  return result;
+}
 
-    const $ = id => document.getElementById(id);
-    const video = $("video");
-    let hls = null;
-    let currentChannel = null;
-    let favoritesOnly = false;
-    let playbackGeneration = 0;
-    let favorites = new Set();
+function makeLogo(channel, small = false) {
+  const el = document.createElement("div");
+  el.className = "mini-logo";
+  const label = channel.name.replace(/\s+/g, " ").trim();
+  el.textContent = label.length > 9 ? label.slice(0, 8) : label;
+  el.title = channel.name;
 
-    try {
-      const saved = JSON.parse(localStorage.getItem("anvar-iptv-favorites") || "[]");
-      if (Array.isArray(saved)) favorites = new Set(saved);
-    } catch (error) {
-      favorites = new Set();
-    }
+  if (channel.logoUrl) {
+    const img = document.createElement("img");
+    img.src = channel.logoUrl;
+    img.alt = "";
+    img.loading = "lazy";
+    img.style.cssText = "width:100%;height:100%;object-fit:contain;padding:5px;border-radius:inherit";
+    img.onerror = () => img.remove();
+    el.textContent = "";
+    el.append(img);
+  }
+  return el;
+}
 
-    $("year").textContent = new Date().getFullYear();
+function stopPlayer() {
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+}
 
-    function setStatus(message) {
-      $("status").textContent = message;
-    }
+function playChannel(channel) {
+  if (!channel) return;
+  activeId = channel.id;
 
-    function stopPlayback() {
-      playbackGeneration++;
+  document.getElementById("currentName").textContent = channel.name;
+  document.getElementById("currentCategory").textContent = channel.category;
+  const currentLogo = document.getElementById("currentLogo");
+  currentLogo.replaceChildren(makeLogo(channel));
+  currentLogo.style.overflow = "hidden";
 
-      if (hls) {
+  stopPlayer();
+  placeholder.classList.remove("hidden");
+  placeholder.querySelector("h2").textContent = channel.name;
+  placeholder.querySelector("p").textContent = "Подключение к трансляции…";
+  message.textContent = "Подключаемся к " + channel.name + "…";
+
+  renderChannels();
+  renderPopular();
+
+  const isHls = /\.m3u8($|[?#])/i.test(channel.url);
+
+  if (isHls && window.Hls && Hls.isSupported()) {
+    hls = new Hls({ enableWorker: true });
+    hls.loadSource(channel.url);
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      placeholder.classList.add("hidden");
+      message.textContent = "Поток готов · " + channel.name;
+      video.play().catch(() => {
+        message.textContent = "Нажми ▶ в плеере для просмотра.";
+      });
+    });
+
+    hls.on(Hls.Events.ERROR, (_event, data) => {
+      if (data.fatal) {
+        message.textContent = "Поток недоступен. Попробуй другой канал.";
+        placeholder.classList.remove("hidden");
+        placeholder.querySelector("p").textContent =
+          "Проверь доступность трансляции или выбери другой канал.";
         hls.destroy();
         hls = null;
       }
+    });
+  } else {
+    video.src = channel.url;
+    video.play().then(() => {
+      placeholder.classList.add("hidden");
+    }).catch(() => {
+      message.textContent = "Нажми ▶ в плеере. Если видео не запускается, источник может быть недоступен.";
+    });
+  }
+}
 
-      video.pause();
-      video.removeAttribute("src");
-      video.load();
-      video.onerror = null;
-      video.onloadedmetadata = null;
-      $("emptyPlayer").classList.remove("hidden");
-    }
+function renderCategories() {
+  const box = document.getElementById("categories");
+  box.replaceChildren();
 
-    function startPlayback(channel) {
-      currentChannel = channel;
-      stopPlayback();
-
-      const generation = playbackGeneration;
-
-      $("nowPlaying").textContent = channel.name;
-      $("emptyPlayer").classList.add("hidden");
-      $("playBtn").textContent = "▶ Yenidən izlə";
-      setStatus("Yayım yüklənir...");
-      updateFavoriteButton();
-      renderChannels();
-
-      function showError(message) {
-        if (generation !== playbackGeneration) return;
-        setStatus(message);
-        $("emptyPlayer").classList.remove("hidden");
-      }
-
-      function startNativeHls() {
-        video.src = channel.url;
-
-        video.onloadedmetadata = function () {
-          if (generation !== playbackGeneration) return;
-          setStatus("Yayım hazırdır.");
-        };
-
-        video.onerror = function () {
-          showError("Yayım açılmadı. Ünvanı və internet bağlantısını yoxlayın.");
-        };
-
-        video.play().catch(function () {
-          if (generation === playbackGeneration) {
-            setStatus("Videonu başlatmaq üçün ▶ düyməsinə basın.");
-          }
-        });
-      }
-
-      if (window.Hls && Hls.isSupported()) {
-        const player = new Hls({
-          enableWorker: true,
-          maxBufferLength: 20,
-          manifestLoadingTimeOut: 15000,
-          levelLoadingTimeOut: 15000,
-          fragLoadingTimeOut: 20000,
-          manifestLoadingMaxRetry: 2,
-          levelLoadingMaxRetry: 2,
-          fragLoadingMaxRetry: 2
-        });
-
-        hls = player;
-
-        player.on(Hls.Events.MANIFEST_PARSED, function () {
-          if (generation !== playbackGeneration || hls !== player) return;
-
-          setStatus("Yayım hazırdır.");
-
-          video.play().catch(function () {
-            if (generation === playbackGeneration) {
-              setStatus("Yayımı başlatmaq üçün videodakı ▶ düyməsinə basın.");
-            }
-          });
-        });
-
-        player.on(Hls.Events.ERROR, function (event, data) {
-          if (generation !== playbackGeneration || hls !== player || !data.fatal) return;
-
-          if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-            setStatus("Video bərpa edilir...");
-            player.recoverMediaError();
-            return;
-          }
-
-          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            showError("Serverə qoşulmaq mümkün olmadı. Ünvan, internet və ya CORS problemi ola bilər.");
-          } else {
-            showError("Bu yayım açıla bilmədi. Başqa kanal sınayın.");
-          }
-
-          player.destroy();
-          if (hls === player) hls = null;
-        });
-
-        player.attachMedia(video);
-        player.loadSource(channel.url);
-
-      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        startNativeHls();
-      } else {
-        showError("Bu brauzer HLS formatını dəstəkləmir.");
-      }
-    }
-
-    function updateFavoriteButton() {
-      const button = $("favoriteCurrent");
-
-      if (!currentChannel) {
-        button.textContent = "☆ Seçilmişlərə əlavə et";
-        button.disabled = true;
-        return;
-      }
-
-      button.disabled = false;
-      const saved = favorites.has(currentChannel.name);
-      button.textContent = saved ? "★ Seçilmişlərdədir" : "☆ Seçilmişlərə əlavə et";
-      button.classList.toggle("active", saved);
-    }
-
-    function toggleFavorite(channel) {
-      if (favorites.has(channel.name)) {
-        favorites.delete(channel.name);
-      } else {
-        favorites.add(channel.name);
-      }
-
-      try {
-        localStorage.setItem("anvar-iptv-favorites", JSON.stringify([...favorites]));
-      } catch (error) {}
-
-      updateFavoriteButton();
-      renderChannels();
-    }
-
-    function renderChannels() {
-      const query = $("search").value.trim().toLocaleLowerCase("az");
-      const list = $("channelList");
-
-      const filtered = channels.filter(channel => {
-        const matches = channel.name.toLocaleLowerCase("az").includes(query);
-        return matches && (!favoritesOnly || favorites.has(channel.name));
-      });
-
-      $("count").textContent = filtered.length + " kanal";
-      list.replaceChildren();
-
-      if (!filtered.length) {
-        const empty = document.createElement("div");
-        empty.className = "empty-list";
-        empty.textContent = favoritesOnly ? "Seçilmiş kanal yoxdur." : "Kanal tapılmadı.";
-        list.appendChild(empty);
-        return;
-      }
-
-      filtered.forEach(channel => {
-        const row = document.createElement("div");
-        row.className = "channel" + (currentChannel === channel ? " active" : "");
-
-        const selectButton = document.createElement("button");
-        selectButton.type = "button";
-        selectButton.className = "channel";
-        selectButton.style.cssText = "border:0;padding:0;background:transparent;flex:1;min-width:0";
-        selectButton.setAttribute("aria-label", channel.name + " izlə");
-
-        const logo = document.createElement("span");
-        logo.className = "channel-logo";
-        logo.textContent = channel.logo;
-
-        const info = document.createElement("span");
-        info.className = "channel-info";
-
-        const name = document.createElement("span");
-        name.className = "channel-name";
-        name.textContent = channel.name;
-
-        const category = document.createElement("span");
-        category.className = "channel-category";
-        category.textContent = channel.category;
-
-        info.append(name, document.createElement("br"), category);
-        selectButton.append(logo, info);
-        selectButton.addEventListener("click", () => startPlayback(channel));
-
-        const star = document.createElement("button");
-        star.type = "button";
-        star.className = "star-btn" + (favorites.has(channel.name) ? " fav" : "");
-        star.textContent = favorites.has(channel.name) ? "★" : "☆";
-        star.setAttribute("aria-label", "Seçilmişlərə əlavə et: " + channel.name);
-        star.addEventListener("click", () => toggleFavorite(channel));
-
-        row.append(selectButton, star);
-        list.appendChild(row);
-      });
-    }
-
-    $("search").addEventListener("input", renderChannels);
-
-    $("allBtn").addEventListener("click", () => {
-      favoritesOnly = false;
-      $("allBtn").classList.add("active");
-      $("favoritesBtn").classList.remove("active");
+  const categories = ["Все", ...new Set(channels.map(c => c.category))];
+  categories.forEach(category => {
+    const button = document.createElement("button");
+    button.className = "cat" + (category === activeCategory ? " active" : "");
+    button.textContent = category === "Все" ? "Все каналы" : category;
+    button.dataset.cat = category;
+    button.addEventListener("click", () => {
+      activeCategory = category;
+      renderCategories();
       renderChannels();
     });
+    box.append(button);
+  });
+}
 
-    $("favoritesBtn").addEventListener("click", () => {
-      favoritesOnly = true;
-      $("favoritesBtn").classList.add("active");
-      $("allBtn").classList.remove("active");
-      renderChannels();
+function filteredChannels() {
+  const query = searchBox.value.trim().toLocaleLowerCase();
+  return channels.filter(c =>
+    (activeCategory === "Все" || c.category === activeCategory) &&
+    (c.name.toLocaleLowerCase().includes(query) ||
+     c.category.toLocaleLowerCase().includes(query))
+  );
+}
+
+function renderChannels() {
+  const list = filteredChannels();
+  channelsBox.replaceChildren();
+
+  list.forEach(channel => {
+    const button = document.createElement("button");
+    button.className = "channel" + (channel.id === activeId ? " selected" : "");
+    button.append(makeLogo(channel));
+
+    const copy = document.createElement("div");
+    copy.className = "channel-copy";
+
+    const name = document.createElement("strong");
+    name.textContent = channel.name;
+
+    const category = document.createElement("span");
+    category.textContent = channel.category;
+
+    copy.append(name, category);
+    button.append(copy);
+    button.addEventListener("click", () => playChannel(channel));
+    channelsBox.append(button);
+  });
+
+  counter.textContent = list.length + " каналов";
+  document.getElementById("empty").classList.toggle("hidden", list.length > 0);
+}
+
+function renderPopular() {
+  popularBox.replaceChildren();
+  const list = channels.slice(0, 5);
+
+  if (!list.length) {
+    popularBox.textContent = "В плейлисте пока нет каналов.";
+    return;
+  }
+
+  list.forEach(channel => {
+    const row = document.createElement("div");
+    row.className = "side-item" + (channel.id === activeId ? " selected" : "");
+    row.append(makeLogo(channel, true));
+
+    const info = document.createElement("div");
+    const name = document.createElement("div");
+    name.className = "side-name";
+    name.textContent = channel.name;
+    const cat = document.createElement("div");
+    cat.className = "side-category";
+    cat.textContent = channel.category;
+    info.append(name, cat);
+    row.append(info);
+    row.addEventListener("click", () => playChannel(channel));
+    popularBox.append(row);
+  });
+}
+
+async function loadPlaylist() {
+  message.textContent = "Загружаем список каналов…";
+  try {
+    const response = await fetch("./playlist.m3u?updated=" + Date.now(), {
+      cache: "no-store"
     });
+    if (!response.ok) throw new Error("HTTP " + response.status);
 
-    $("playBtn").addEventListener("click", () => {
-      if (currentChannel) {
-        startPlayback(currentChannel);
-      } else {
-        setStatus("Əvvəlcə siyahıdan kanal seçin.");
-      }
-    });
+    const text = await response.text();
+    channels = parsePlaylist(text);
 
-    $("stopBtn").addEventListener("click", () => {
-      stopPlayback();
-      setStatus("Yayım dayandırıldı.");
-    });
+    if (!channels.length) {
+      throw new Error("В плейлисте не найдены каналы");
+    }
 
-    $("favoriteCurrent").addEventListener("click", () => {
-      if (currentChannel) toggleFavorite(currentChannel);
-    });
-
-    $("fullscreenBtn").addEventListener("click", async () => {
-      const target = document.querySelector(".video-wrap");
-
-      try {
-        if (document.fullscreenElement) {
-          await document.exitFullscreen();
-        } else if (target.requestFullscreen) {
-          await target.requestFullscreen();
-        } else if (video.webkitEnterFullscreen) {
-          video.webkitEnterFullscreen();
-        } else {
-          setStatus("Tam ekran bu brauzerdə dəstəklənmir.");
-        }
-      } catch (error) {
-        setStatus("Tam ekran açıla bilmədi.");
-      }
-    });
-
+    activeCategory = "Все";
+    renderCategories();
     renderChannels();
-    updateFavoriteButton();
+    renderPopular();
+    message.textContent = "Список успешно загружен";
+    document.getElementById("playerCount").textContent =
+      channels.length + " каналов";
+  } catch (error) {
+    message.textContent = "Не удалось загрузить playlist.m3u";
+    channelsBox.replaceChildren();
+    const errorBox = document.getElementById("empty");
+    errorBox.textContent =
+      "Проверь, что playlist.m3u находится рядом с index.html в репозитории.";
+    errorBox.classList.remove("hidden");
+    counter.textContent = "Ошибка загрузки";
+    popularBox.textContent = "Не удалось загрузить плейлист.";
+  }
+}
 
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("./service-worker.js")
-          .catch(function (error) {
-            console.warn("Service Worker:", error);
-          });
-      });
-    }
-  </script>
+searchBox.addEventListener("input", renderChannels);
+document.getElementById("reload").addEventListener("click", loadPlaylist);
+document.getElementById("topSearch").addEventListener("click", () => {
+  document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
+  searchBox.focus({ preventScroll: true });
+});
+
+video.addEventListener("playing", () => {
+  placeholder.classList.add("hidden");
+  message.textContent = "Трансляция воспроизводится";
+});
+video.addEventListener("error", () => {
+  if (activeId !== null) {
+    message.textContent = "Видео не загрузилось. Возможно, источник недоступен.";
+  }
+});
+
+loadPlaylist();
+</script>
 </body>
 </html>
