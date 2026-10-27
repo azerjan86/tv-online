@@ -1,12 +1,24 @@
 
 #EXTM3U
-#EXTINF:-1 group-title="Xəbərlər",AzTV
-https://str.yodacdn.net/azertv/index.m3u8
-#EXTINF:-1 group-title="Xəbərlər",İctimai TV
-https://live.itv.az/itv.m3u8
-#EXTINF:-1 group-title="İdman",CBC Sport
-https://mn-nl.mncdn.com/cbcsports_live/cbcsports/playlist.m3u8
-#EXTINF:-1 group-title="Mədəniyyət",Mədəniyyət TV
-https://str.yodacdn.net/medeniyyettele/index.m3u8
-#EXTINF:-1 group-title="Xəbərlər",Baku TV
+#EXTINF:-1,AzTV
+https://operativmm.az/tvs/az/stream9/index.m3u8
+#EXTINF:-1,Ictimai
+https://operativmm.az/tvs/ictimai/stream6/index.m3u8
+#EXTINF:-1,Azad TV Atv
+https://lives.atv.az:5443/ATV_TV_STREAM/streams/atvcanli.m3u8
+#EXTINF:-1,Xezer
+https://operativmm.az/tvs/xezer/stream/index.m3u8
+#EXTINF:-1,Space AZ
+https://operativmm.az/tvs/space/stream8/index.m3u8
+#EXTINF:-1,Arb AZ
+https://operativmm.az/tvs/arb/stream5/index.m3u8
+#EXTINF:-1,Baku
 https://rtmp.baku.tv/hls/bakutv.m3u8
+#EXTINF:-1,Real TV
+https://operativmm.az/tvs/realtv/stream2/index.m3u8
+#EXTINF:-1,Arb 24
+https://operativmm.az/tvs/arb24/stream/index.m3u8
+#EXTINF:-1,Idman Az
+https://operativmm.az/tvs/idman/stream4/index.m3u8
+#EXTINF:-1,cbc sport 
+https://operativmm.az/tvs/cbcsport/stream3/index.m3u8
