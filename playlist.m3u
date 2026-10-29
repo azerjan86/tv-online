@@ -1,24 +1,24 @@
 
 #EXTM3U
-#EXTINF:-1,AzTV
+#EXTINF:-1 tvg-id="AZTV.az" tvg-logo="https://i.imgur.com/snBMMeH.png",AzTV
 https://operativmm.az/tvs/az/stream9/index.m3u8
-#EXTINF:-1,Ictimai
+#EXTINF:-1 tvg-id="IctimaiTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/3/38/Ictimai_Television_logo_2021.png",Ictimai
 https://operativmm.az/tvs/ictimai/stream6/index.m3u8
-#EXTINF:-1,Azad TV Atv
+#EXTINF:-1 tvg-id="AzadTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/ATV_%282012-h.h.%29.png/474px-ATV_%282012-h.h.%29.png",Azad TV Atv
 https://lives.atv.az:5443/ATV_TV_STREAM/streams/atvcanli.m3u8
-#EXTINF:-1,Xezer
+#EXTINF:-1 tvg-id="XezerTV.az" tvg-logo="https://www.lyngsat.com/logo/tv/xx/xezer-tv-az.png",Xezer
 https://operativmm.az/tvs/xezer/stream/index.m3u8
-#EXTINF:-1,Space AZ
+#EXTINF:-1 tvg-id="SpaceTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/Space_TV_loqosu_%282021-2023%29.png",Space AZ
 https://operativmm.az/tvs/space/stream8/index.m3u8
-#EXTINF:-1,Arb AZ
+#EXTINF:-1 tvg-id="ARB.az" tvg-logo="https://i.imgur.com/E97M2OL.png",Arb AZ
 https://operativmm.az/tvs/arb/stream5/index.m3u8
-#EXTINF:-1,Baku
+#EXTINF:-1 tvg-id="BakuTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Baku_TV_%282018%29.png/640px-Baku_TV_%282018%29.png",Baku
 https://rtmp.baku.tv/hls/bakutv.m3u8
-#EXTINF:-1,Real TV
+#EXTINF:-1 tvg-id="RealTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/Real_TV_loqosu_%282018%29.png",Real TV
 https://operativmm.az/tvs/realtv/stream2/index.m3u8
-#EXTINF:-1,Arb 24
+#EXTINF:-1 tvg-id="ARB24.az" tvg-logo="https://i.imgur.com/mtvIFyq.png",Arb 24
 https://operativmm.az/tvs/arb24/stream/index.m3u8
-#EXTINF:-1,Idman Az
+#EXTINF:-1 tvg-id="IdmanTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/az/thumb/8/88/%C4%B0dman_Az%C9%99rbaycan_TV_loqo_%282019-h.h.%29.png/640px-%C4%B0dman_Az%C9%99rbaycan_TV_loqo_%282019-h.h.%29.png",Idman Az
 https://operativmm.az/tvs/idman/stream4/index.m3u8
-#EXTINF:-1,cbc sport 
+#EXTINF:-1 tvg-id="CBCSport.az" tvg-logo="https://upload.wikimedia.org/wikipedia/az/0/04/CBC_Sport_TV_loqo.png",cbc sport
 https://operativmm.az/tvs/cbcsport/stream3/index.m3u8
