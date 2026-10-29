@@ -22,4 +22,5 @@ https://operativmm.az/tvs/arb24/stream/index.m3u8
 https://operativmm.az/tvs/idman/stream4/index.m3u8
 #EXTINF:-1 tvg-id="CBCSport.az" tvg-logo="https://upload.wikimedia.org/wikipedia/az/0/04/CBC_Sport_TV_loqo.png",cbc sport
 https://operativmm.az/tvs/cbcsport/stream3/index.m3u8
-
+#EXTINF:-1 tvg-id="https://sestv.az/assets/images/ses-logo.png?v=0131202533
+https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8
