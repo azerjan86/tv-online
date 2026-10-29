@@ -22,3 +22,52 @@ https://operativmm.az/tvs/arb24/stream/index.m3u8
 https://operativmm.az/tvs/idman/stream4/index.m3u8
 #EXTINF:-1 tvg-id="CBCSport.az" tvg-logo="https://upload.wikimedia.org/wikipedia/az/0/04/CBC_Sport_TV_loqo.png",cbc sport
 https://operativmm.az/tvs/cbcsport/stream3/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Russia-1.svg/320px-Russia-1.svg.png" group-title="Россия",Первый канал (Сургут)
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_1TV.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Russia-1.svg/320px-Russia-1.svg.png" group-title="Россия",Россия 1 (Сургут)
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_ROSSIA1.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/NTV_logo.svg/320px-NTV_logo.svg.png" group-title="Россия",НТВ (Сургут)
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_NTV.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/5kanal_logo.svg/320px-5kanal_logo.svg.png" group-title="Россия",Пятый канал (Сургут)
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_5TV.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Russia-K.svg/320px-Russia-K.svg.png" group-title="Россия",Россия K (Сургут)
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_ROSSIAK.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Russia-24.svg/320px-Russia-24.svg.png" group-title="Россия",Россия 24 (Сургут)
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_ROSSIA24.m3u8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Karusel_logo.svg/320px-Karusel_logo.svg.png" group-title="Россия",Карусель (Сургут)
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_KARUSEL.m3u8
+#EXTINF:-1 group-title="Россия",ОТР
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_OTR.m3u8
+#EXTINF:-1 group-title="Россия",ТВЦ
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_TVC.m3u8
+#EXTINF:-1 group-title="Россия",РЕН ТВ
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_RENTV.m3u8
+#EXTINF:-1 group-title="Россия",СПАС
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_SPAS.m3u8
+#EXTINF:-1 group-title="Россия",СТС
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_STS.m3u8
+#EXTINF:-1 group-title="Россия",Домашний
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_DOMASHNIY.m3u8
+#EXTINF:-1 group-title="Россия",ТВ3
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_TV3.m3u8
+#EXTINF:-1 group-title="Россия",Пятница!
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_FRIDAY.m3u8
+#EXTINF:-1 group-title="Россия",Звезда
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_ZVEZDA.m3u8
+#EXTINF:-1 group-title="Россия",МИР
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_MIR.m3u8
+#EXTINF:-1 group-title="Россия",ТНТ
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_TNT.m3u8
+#EXTINF:-1 group-title="Россия",МУЗ ТВ
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_MUZTV.m3u8
+#EXTINF:-1 group-title="Россия",Югра HD
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_UGRA.m3u8
+#EXTINF:-1 group-title="Россия",UGRA Travel
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_UGRATRAVEL.m3u8
+#EXTINF:-1 group-title="Россия",С1 HD
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_C1HD.m3u8
+#EXTINF:-1 group-title="Россия",С86 HD
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_C86HD.m3u8
+#EXTINF:-1 group-title="Россия",Сургут 24 HD
+http://dmitry-tv.ddns.net/hls/zabava/region/SUR/CH_SURGUT24HD.m3u8
