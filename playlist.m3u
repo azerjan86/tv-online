@@ -8,7 +8,7 @@ https://operativmm.az/tvs/ictimai/stream6/index.m3u8
 https://lives.atv.az:5443/ATV_TV_STREAM/streams/atvcanli.m3u8
 #EXTINF:-1 tvg-id="XezerTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Xezer_TV_logo.png/320px-Xezer_TV_logo.png",Xezer
 https://operativmm.az/tvs/xezer/stream/index.m3u8
-#EXTINF:-1 tvg-id="SpaceTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Space_TV_loqosu_%282023-h.h.%29.png/296px-Space_TV_loqosu_%282023-h.h.%29.png",Space AZ
+#EXTINF:-1 tvg-id="SpaceTV.az" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Space_TV_loqosu_%282021-2023%29.png/320px-Space_TV_loqosu_%282021-2023%29.png",Space AZ
 https://operativmm.az/tvs/space/stream8/index.m3u8
 #EXTINF:-1 tvg-id="ARB.az" tvg-logo="https://i.imgur.com/E97M2OL.png",Arb AZ
 https://operativmm.az/tvs/arb/stream5/index.m3u8
