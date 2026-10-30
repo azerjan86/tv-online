@@ -12,6 +12,8 @@ https://operativmm.az/tvs/xezer/stream/index.m3u8
 https://operativmm.az/tvs/space/stream8/index.m3u8
 #EXTINF:-1 tvg-id="ARB.az" tvg-logo="https://i.imgur.com/E97M2OL.png",Arb AZ
 https://operativmm.az/tvs/arb/stream5/index.m3u8
+#EXTINF:-1https://avatars.mds.yandex.net/i?id=f293d15593a36128035371855fda29862e08fcc4-12496338-images-thumbs&n=13&n=13&w=690&h=460,Arb AZ
+https://yayin2.canlitv.fun/live/dunyatv.stream/playlist.m3u8?hash=4c28c92affc939203b9c0dbf23b84593
 #EXTINF:-1 tvg-id="BakuTV.az" tvg-logo="https://i.imgur.com/r4FzxSg.png",Baku
 https://rtmp.baku.tv/hls/bakutv.m3u8
 #EXTINF:-1 tvg-id="RealTV.az" tvg-logo="https://i.imgur.com/e2KFL0R.png",Real TV
